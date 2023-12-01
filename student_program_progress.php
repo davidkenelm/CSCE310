@@ -42,20 +42,57 @@ include 'config.php';
         $result = $stmt->get_result();
 
         // Display the fetched student information as a list
-        echo "<h3>List of Students</h3>";
-        echo "<ul>";
-        while ($row = $result->fetch_assoc()) {
-            echo "<li>{$row['Name']} (ID: {$row['Program_Num']})</li>"; // Modify column names as needed
-            // Display other student information as needed
-        }
-        echo "</ul>";
+        if ($result->num_rows > 0) {
+          // Start table formatting
+          echo "<h3>Student Progress Information</h3>";
+          echo "<table border='1'>";
+          echo "<tr><th>Name</th><th>Program Number</th><th>Action</th></tr>";
 
+          // Loop through the result set and display data in table rows
+          while ($row = $result->fetch_assoc()) {
+              echo "<tr>";
+              echo "<td>" . $row['Name'] . "</td>"; // Modify column names as needed
+              echo "<td>" . $row['Program_Num'] . "</td>"; // Modify column names as needed
+
+              // Button column with a form to fetch and display additional information
+              echo "<td>";
+              echo "<form method='POST' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>";
+              echo "<input type='hidden' name='programNum' value='" . $row['Program_Num'] . "'>";
+              echo "<input type='hidden' name='studentID' value='" . $specific_student_id . "'>";
+              echo "<input type='submit' name='showDetails' value='Show Details'>";
+              echo "</form>";
+              echo "</td>";
+
+              echo "</tr>";
+              
+          }
+
+          // Close table
+          echo "</table>";
         // Close the statement
         $stmt->close();
     } else {
         echo "Student ID is empty.";
     }
   }
+  if (isset($_POST['showDetails']) && !empty($_POST['programNum']) && !empty($_POST['studentID'])) {
+    echo $_POST['programNum'];
+    echo "<tr>";
+    echo "<td colspan='3'>";
+
+    // Additional table for program details
+    echo "<table border='1'>";
+    echo "<tr><th>Detail 1</th><th>Detail 2</th></tr>";
+    echo "<tr><td>Detail Value 1</td><td>Detail Value 2</td></tr>";
+    // Fetch and display additional details for the specific program
+    // Modify this part to fetch and display details from your database
+
+    echo "</table>";
+
+    echo "</td>";
+    echo "</tr>";
+}
+}
 
   ?>
 
