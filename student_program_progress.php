@@ -44,7 +44,7 @@ include 'config.php';
         // Display the fetched student information as a list
         if ($result->num_rows > 0) {
           // Start table formatting
-          echo "<h3>Student Progress Information</h3>";
+          echo "<h3>Student's Programs</h3>";
           echo "<table border='1'>";
           echo "<tr><th>Name</th><th>Program Number</th><th>Action</th></tr>";
 
@@ -76,14 +76,55 @@ include 'config.php';
     }
   }
   if (isset($_POST['showDetails']) && !empty($_POST['programNum']) && !empty($_POST['studentID'])) {
-    echo $_POST['programNum'];
-    echo "<tr>";
-    echo "<td colspan='3'>";
+    if ($_POST['programNum']==3){
+      echo " ";
+    }
+    else{
+      $programNum = $_POST['programNum'];
+      $uin = $_POST['studentID'];
+      $sql = "SELECT * FROM cert_enrollment where UIN = ?";
 
-    // Additional table for program details
-    echo "<table border='1'>";
-    echo "<tr><th>Detail 1</th><th>Detail 2</th></tr>";
-    echo "<tr><td>Detail Value 1</td><td>Detail Value 2</td></tr>";
+        // Prepare a statement
+        $stmt = $mysql->prepare($sql);
+
+        // Bind the parameter
+        $stmt->bind_param("i", $specific_student_id); // Assuming student_ID is an integer
+
+        // Execute the query
+        $stmt->execute();
+
+        // Get the result
+        $result = $stmt->get_result();
+
+        // Display the fetched student information as a list
+        if ($result->num_rows > 0) {
+          // Start table formatting
+          echo "<h3>Student's Programs</h3>";
+          echo "<table border='1'>";
+          echo "<tr><th>Name</th><th>Program Number</th><th>Action</th></tr>";
+
+          // Loop through the result set and display data in table rows
+          while ($row = $result->fetch_assoc()) {
+              echo "<tr>";
+              echo "<td>" . $row['CertE_Num'] . "</td>"; // Modify column names as needed
+              echo "<td>" . $row['Status'] . "</td>"; // Modify column names as needed
+
+              // Button column with a form to fetch and display additional information
+              
+
+              echo "</tr>";
+              
+          }
+
+          // Close table
+          echo "</table>";
+        // Close the statement
+        $stmt->close();
+
+
+
+    
+    
     // Fetch and display additional details for the specific program
     // Modify this part to fetch and display details from your database
 
@@ -91,8 +132,10 @@ include 'config.php';
 
     echo "</td>";
     echo "</tr>";
+    }
 }
 }
+  }
 
   ?>
 
