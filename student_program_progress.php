@@ -27,7 +27,7 @@ include 'config.php';
       $specific_student_id = $_POST['studentID']; // Retrieve the studentID from the form
       echo $specific_student_id;  
         // Prepare the query to fetch student information based on student_ID
-        $sql = "SELECT * FROM college_student WHERE UIN = ?";
+        $sql = "SELECT * FROM track JOIN programs ON track.Program_Num = programs.Program_Num WHERE track.Student_Num = ?";
 
         // Prepare a statement
         $stmt = $mysql->prepare($sql);
@@ -45,7 +45,7 @@ include 'config.php';
         echo "<h3>List of Students</h3>";
         echo "<ul>";
         while ($row = $result->fetch_assoc()) {
-            echo "<li>{$row['Race']} (ID: {$row['UIN']})</li>"; // Modify column names as needed
+            echo "<li>{$row['Name']} (ID: {$row['Program_Num']})</li>"; // Modify column names as needed
             // Display other student information as needed
         }
         echo "</ul>";
