@@ -74,7 +74,7 @@ include 'config.php';
 
   <?php
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    var_dump($_POST);
+
     // Check if studentID is set and not empty
     
     if (isset($_POST['studentID']) && !empty($_POST['studentID'])) {
@@ -177,12 +177,13 @@ include 'config.php';
               echo "<input type='submit' name='updateCert' value='Update Certification'>";
               echo "<input type='hidden' name='programNum' value='" . $row['Program_Num'] . "'>";
               echo "<input type='hidden' name='studentID' value='" . $specific_student_id . "'>";
+              echo "<input type='hidden' name = 'showDetails' value='showDetails'>";
+              echo "<input type='hidden' name='ce_id' value='" . $row['CertE_Num'] . "'>";
               
               echo "</form>";
               echo "</td>";
               // Button column with a form to fetch and display additional information
               
-              var_dump($_POST);
 
              
               echo "</tr>";
@@ -256,7 +257,25 @@ include 'config.php';
     // Process the "Update Certification" form here
     // ...
     // Display the form for "Update Certification" outside the table
-    echo "HELLO WORLD";
+    $sql = "UPDATE cert_enrollment SET Status = ? Where CertE_Num = ?";
+
+    $stmt = $mysql->prepare($sql);
+
+    $stmt->bind_param("si",$_POST['status'],$_POST['ce_id']);
+    $stmt->execute();
+
+    if($stmt->affected_rows > 0) {
+      // Update successful
+      echo "Status updated successfully!";
+  } else {
+      // No rows affected (CE_ID not found or status already set to the same value)
+      echo "No changes made.";
+  }
+  
+  // Close the statement
+  $stmt->close();
+
+// Bind parameters and execute the statement
 
 }
 
