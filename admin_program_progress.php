@@ -79,8 +79,27 @@ include 'config.php';
     
     if (isset($_POST['studentID']) && !empty($_POST['studentID'])) {
       
-      $specific_student_id = $_POST['studentID']; // Retrieve the studentID from the form
-      echo $specific_student_id;  
+      $specific_student_id = $_POST['studentID'];
+       // Retrieve the studentID from the form
+       $sql = "SELECT * FROM users WHERE UIN = ?";
+        // Prepare a statement
+        $stmt = $mysql->prepare($sql);
+
+        // Bind the parameter
+        $stmt->bind_param("i", $specific_student_id); // Assuming student_ID is an integer
+
+        // Execute the query
+        $stmt->execute();
+
+        // Get the result
+        $result = $stmt->get_result();
+
+        $row = $result->fetch_assoc();
+
+        $full_name = $row['First_Name'] . " " . $row['Last_Name'];
+
+        $stmt->close();
+ 
         // Prepare the query to fetch student information based on student_ID
         $sql = "SELECT * FROM track JOIN programs ON track.Program_Num = programs.Program_Num WHERE track.Student_Num = ?";
 
@@ -96,11 +115,13 @@ include 'config.php';
         // Get the result
         $result = $stmt->get_result();
 
+
         // Display the fetched student information as a list
+        echo "<br></br>";
         if ($result->num_rows > 0) {
           // Start table formatting
           
-          echo "<h3>Student's Programs</h3>";
+          echo "<h3>" . $full_name . "'s Programs</h3>";
           echo "<table border='1' style='width: 100%;'>";
           echo "<tr><th>Program Name</th><th>Description</th><th>Details</th></tr>";
           // Loop through the result set and display data in table rows
@@ -114,6 +135,7 @@ include 'config.php';
               echo "<form method='POST' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>";
               echo "<input type='hidden' name='programNum' value='" . $row['Program_Num'] . "'>";
               echo "<input type='hidden' name='studentID' value='" . $specific_student_id . "'>";
+              echo "<input type='hidden' name='programName' value='" . $row['Name'] . "'>";
               echo "<input type='submit' name='showDetails' value='Show Details'>";
               echo "</form>";
               echo "</td>";
@@ -124,8 +146,14 @@ include 'config.php';
 
           // Close table
           echo "</table>";
+          
         // Close the statement
         $stmt->close();
+        echo "<form method='POST' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>";
+              echo "<input type='hidden' name='programNum' value='cancel'>";
+              echo "<input type='hidden' name='studentID' value='" . $specific_student_id . "'>";
+              echo "<input type='submit' name='showDetails' value='Close Details'>";
+              echo "</form>";
     } else {
         echo "Student ID is empty.";
     }
@@ -154,7 +182,7 @@ include 'config.php';
         // Display the fetched student information as a list
         if ($result->num_rows > 0) {
           // Start table formatting
-          echo "<h3>Student's Certifications</h3>";
+          echo "<h3>Student's Certifications for ". $_POST['programName'] ."</h3>";
           echo "<table border='1' style='width: 100%;'>";
           echo "<tr><th>Certification</th><th>Status</th><th>Training Status</th><th>Semester</th><th>Year</th><th>Delete</th></tr>";
           
@@ -177,6 +205,8 @@ include 'config.php';
               echo "<input type='hidden' name='programNum' value='" . $row['Program_Num'] . "'>";
               echo "<input type='hidden' name='studentID' value='" . $specific_student_id . "'>";
               echo "<input type='hidden' name = 'showDetails' value='showDetails'>";
+              echo "<input type='hidden' name='programName' value='" . $_POST['programName'] . "'>";
+              
               echo "<input type='hidden' name='ce_id' value='" . $row['CertE_Num'] . "'>";
               
               echo "</form>";
@@ -198,6 +228,7 @@ include 'config.php';
               echo "<input type='hidden' name='studentID' value='" . $specific_student_id . "'>";
               echo "<input type='hidden' name = 'showDetails' value='showDetails'>";
               echo "<input type='hidden' name='ce_id' value='" . $row['CertE_Num'] . "'>";
+              echo "<input type='hidden' name='programName' value='" . $_POST['programName'] . "'>";
               
               echo "</form>";
               echo "</td>";
@@ -213,6 +244,7 @@ include 'config.php';
               echo "<input type='hidden' name='studentID' value='" . $specific_student_id . "'>";
               echo "<input type='hidden' name = 'showDetails' value='showDetails'>";
               echo "<input type='hidden' name='ce_id' value='" . $row['CertE_Num'] . "'>";
+              echo "<input type='hidden' name='programName' value='" . $_POST['programName'] . "'>";
               echo "</form>";
               echo "</td>";
 
@@ -225,6 +257,9 @@ include 'config.php';
           echo "</table>";
         // Close the statement
         $stmt->close();
+        }else{
+          echo "<h3>Student's Certifications for ". $_POST['programName'] ."</h3>";
+          echo "<h4>No Certification records found for this Program</h4>";
         }
         $showInsertCert;
         if (isset($_POST['showInsertCert'])){
@@ -243,8 +278,10 @@ include 'config.php';
         <button type = 'submit'>Insert Certification for this Program</button>
         <input type='hidden' name='programNum' value='" . $programNum . "'>
         <input type='hidden' name='studentID' value='" . $specific_student_id . "'>
-        <input type='hidden' name = 'showDetails' value='showDetails'>
+        <input type='hidden' name = 'showDetails' value='showDetails'>";
+        echo "<input type='hidden' name='programName' value='" . $_POST['programName'] . "'>
         </form>";
+
 
         if(isset($_POST['showInsertCert']) && $_POST['showInsertCert']=='show'){
           echo "<br></br>";
@@ -297,7 +334,8 @@ include 'config.php';
     <input type='submit' name='submitNewCert' value='Submit'>
     <input type='hidden' name='programNum' value='" . $programNum . "'>
     <input type='hidden' name='studentID' value='" . $specific_student_id . "'>
-    <input type='hidden' name = 'showDetails' value='showDetails'>
+    <input type='hidden' name = 'showDetails' value='showDetails'>";
+    echo "<input type='hidden' name='programName' value='" . $_POST['programName'] . "'>
 </form>";
         }
 
@@ -339,6 +377,7 @@ include 'config.php';
               echo "<input type='hidden' name='studentID' value='" . $specific_student_id . "'>";
               echo "<input type='hidden' name = 'showDetails' value='showDetails'>";
               echo "<input type='hidden' name='class_id' value='" . $row['CE_NUM'] . "'>";
+              echo "<input type='hidden' name='programName' value='" . $_POST['programName'] . "'>";
               
               echo "</form>";
               echo "</td>"; // Modify column names as needed
@@ -351,6 +390,7 @@ include 'config.php';
               echo "<input type='hidden' name='studentID' value='" . $specific_student_id . "'>";
               echo "<input type='hidden' name = 'showDetails' value='showDetails'>";
               echo "<input type='hidden' name='class_id' value='" . $row['CE_NUM'] . "'>";
+              echo "<input type='hidden' name='programName' value='" . $_POST['programName'] . "'>";
               echo "</form>";
               echo "</td>";
               
@@ -377,6 +417,9 @@ include 'config.php';
     // Modify this part to fetch and display details from your database
 
     
+    }else{
+      echo "<h3>Student's Enrolled Classes</h3>";
+      echo "<h4>No Classes enrolled</h4>";
     }
     $showInsertClass;
         if (isset($_POST['showInsertClass'])){
@@ -395,7 +438,8 @@ include 'config.php';
         <button type = 'submit'>Insert Class Enrolled</button>
         <input type='hidden' name='programNum' value='" . $programNum . "'>
         <input type='hidden' name='studentID' value='" . $specific_student_id . "'>
-        <input type='hidden' name = 'showDetails' value='showDetails'>
+        <input type='hidden' name = 'showDetails' value='showDetails'>";
+        echo "<input type='hidden' name='programName' value='" . $_POST['programName'] . "'>
         </form>";
 
         if(isset($_POST['showInsertClass']) && $_POST['showInsertClass']=='show'){
@@ -449,7 +493,8 @@ include 'config.php';
     <input type='submit' name='submitNewClass' value='Submit'>
     <input type='hidden' name='programNum' value='" . $programNum . "'>
     <input type='hidden' name='studentID' value='" . $specific_student_id . "'>
-    <input type='hidden' name = 'showDetails' value='showDetails'>
+    <input type='hidden' name = 'showDetails' value='showDetails'>";
+    echo "<input type='hidden' name='programName' value='" . $_POST['programName'] . "'>
 </form>";
         }
 
@@ -491,6 +536,7 @@ include 'config.php';
               echo "<input type='hidden' name='studentID' value='" . $specific_student_id . "'>";
               echo "<input type='hidden' name = 'showDetails' value='showDetails'>";
               echo "<input type='hidden' name='intern_id' value='" . $row['IA_Num'] . "'>";
+              echo "<input type='hidden' name='programName' value='" . $_POST['programName'] . "'>";
               
               echo "</form>";
               echo "</td>"; // Modify column names as needed
@@ -502,6 +548,7 @@ include 'config.php';
               echo "<input type='hidden' name='studentID' value='" . $specific_student_id . "'>";
               echo "<input type='hidden' name = 'showDetails' value='showDetails'>";
               echo "<input type='hidden' name='intern_id' value='" . $row['IA_Num'] . "'>";
+              echo "<input type='hidden' name='programName' value='" . $_POST['programName'] . "'>";
               echo "</form>";
               echo "</td>";
               
@@ -528,6 +575,9 @@ include 'config.php';
     // Modify this part to fetch and display details from your database
 
     
+    }else{
+      echo "<h3>Student's Internships</h3>";
+      echo "<h4>No Internships Found</h4>";
     }
     $showInsertIntern;
         if (isset($_POST['showInsertIntern'])){
@@ -546,7 +596,8 @@ include 'config.php';
         <button type = 'submit'>Insert Internship</button>
         <input type='hidden' name='programNum' value='" . $programNum . "'>
         <input type='hidden' name='studentID' value='" . $specific_student_id . "'>
-        <input type='hidden' name = 'showDetails' value='showDetails'>
+        <input type='hidden' name = 'showDetails' value='showDetails'>";
+        echo "<input type='hidden' name='programName' value='" . $_POST['programName'] . "'>
         </form>";
 
         if(isset($_POST['showInsertIntern']) && $_POST['showInsertIntern']=='show'){
@@ -594,7 +645,8 @@ include 'config.php';
     <input type='submit' name='submitNewIntern' value='Submit'>
     <input type='hidden' name='programNum' value='" . $programNum . "'>
     <input type='hidden' name='studentID' value='" . $specific_student_id . "'>
-    <input type='hidden' name = 'showDetails' value='showDetails'>
+    <input type='hidden' name = 'showDetails' value='showDetails'>";
+    echo "<input type='hidden' name='programName' value='" . $_POST['programName'] . "'>
 </form>";
         }
 
@@ -626,6 +678,7 @@ include 'config.php';
   echo "<input type='hidden' name='studentID' value='" . $_POST['studentID'] . "'>";
   echo "<input type='hidden' name = 'showDetails' value='showDetails'>";
   echo "<input type='hidden' name='ce_id' value='" . $_POST['ce_id'] . "'>";
+  echo "<input type='hidden' name='programName' value='" . $_POST['programName'] . "'>";
   
   echo "</form>";
 
@@ -664,6 +717,7 @@ echo "<form id='autoForm' method='POST' action='" . htmlspecialchars($_SERVER["P
 echo "<input type='hidden' name='programNum' value='" . $_POST['programNum'] . "'>";
 echo "<input type='hidden' name='studentID' value='" . $_POST['studentID'] . "'>";
 echo "<input type='hidden' name = 'showDetails' value='showDetails'>";
+echo "<input type='hidden' name='programName' value='" . $_POST['programName'] . "'>";
 
 echo "</form>";
 
@@ -702,6 +756,7 @@ echo "<form id='autoForm' method='POST' action='" . htmlspecialchars($_SERVER["P
 echo "<input type='hidden' name='programNum' value='" . $_POST['programNum'] . "'>";
 echo "<input type='hidden' name='studentID' value='" . $_POST['studentID'] . "'>";
 echo "<input type='hidden' name = 'showDetails' value='showDetails'>";
+echo "<input type='hidden' name='programName' value='" . $_POST['programName'] . "'>";
 
 echo "</form>";
 
@@ -747,6 +802,7 @@ echo "<input type='hidden' name='programNum' value='" . $_POST['programNum'] . "
 echo "<input type='hidden' name='studentID' value='" . $_POST['studentID'] . "'>";
 echo "<input type='hidden' name = 'showDetails' value='showDetails'>";
 echo "<input type='hidden' name='ce_id' value='" . $_POST['ce_id'] . "'>";
+echo "<input type='hidden' name='programName' value='" . $_POST['programName'] . "'>";
 
 echo "</form>";
 
@@ -788,6 +844,7 @@ echo "<form id='autoForm' method='POST' action='" . htmlspecialchars($_SERVER["P
 echo "<input type='hidden' name='programNum' value='" . $_POST['programNum'] . "'>";
 echo "<input type='hidden' name='studentID' value='" . $_POST['studentID'] . "'>";
 echo "<input type='hidden' name = 'showDetails' value='showDetails'>";
+echo "<input type='hidden' name='programName' value='" . $_POST['programName'] . "'>";
 
 echo "</form>";
 
@@ -821,6 +878,7 @@ echo "<form id='autoForm' method='POST' action='" . htmlspecialchars($_SERVER["P
 echo "<input type='hidden' name='programNum' value='" . $_POST['programNum'] . "'>";
 echo "<input type='hidden' name='studentID' value='" . $_POST['studentID'] . "'>";
 echo "<input type='hidden' name = 'showDetails' value='showDetails'>";
+echo "<input type='hidden' name='programName' value='" . $_POST['programName'] . "'>";
 
 echo "</form>";
 
@@ -856,6 +914,7 @@ echo "<input type='hidden' name='programNum' value='" . $_POST['programNum'] . "
 echo "<input type='hidden' name='studentID' value='" . $_POST['studentID'] . "'>";
 echo "<input type='hidden' name = 'showDetails' value='showDetails'>";
 echo "<input type='hidden' name='ce_id' value='" . $_POST['ce_id'] . "'>";
+echo "<input type='hidden' name='programName' value='" . $_POST['programName'] . "'>";
 
 echo "</form>";
 
@@ -889,6 +948,7 @@ echo "<input type='hidden' name='programNum' value='" . $_POST['programNum'] . "
 echo "<input type='hidden' name='studentID' value='" . $_POST['studentID'] . "'>";
 echo "<input type='hidden' name = 'showDetails' value='showDetails'>";
 echo "<input type='hidden' name='ce_id' value='" . $_POST['ce_id'] . "'>";
+echo "<input type='hidden' name='programName' value='" . $_POST['programName'] . "'>";
 
 echo "</form>";
 
@@ -921,6 +981,7 @@ if (isset($_POST['deleteClass']) && !empty($_POST['programNum']) && !empty($_POS
   echo "<input type='hidden' name='programNum' value='" . $_POST['programNum'] . "'>";
   echo "<input type='hidden' name='studentID' value='" . $_POST['studentID'] . "'>";
   echo "<input type='hidden' name = 'showDetails' value='showDetails'>";
+  echo "<input type='hidden' name='programName' value='" . $_POST['programName'] . "'>";
   
   echo "</form>";
   
@@ -953,6 +1014,7 @@ if (isset($_POST['deleteClass']) && !empty($_POST['programNum']) && !empty($_POS
     echo "<input type='hidden' name='programNum' value='" . $_POST['programNum'] . "'>";
     echo "<input type='hidden' name='studentID' value='" . $_POST['studentID'] . "'>";
     echo "<input type='hidden' name = 'showDetails' value='showDetails'>";
+    echo "<input type='hidden' name='programName' value='" . $_POST['programName'] . "'>";
     
     echo "</form>";
     
