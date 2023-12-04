@@ -1,3 +1,7 @@
+<?php
+    session_start();
+    include 'config.php';
+?>
 <html>
     <nav class="navbar navbar-expand-lg" style="background-color: rgb(80,0,0);">
     <div class="container-fluid">
@@ -8,14 +12,16 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-            <a class="nav-link active text-light" aria-current="page" href="#">Home</a>
+            <a class="nav-link active text-light" aria-current="page" href="./index.php">Home</a>
             </li>
-            <li class="nav-item">
-            <a class="nav-link text-light" href="./programs-student.php">Programs</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link text-light" href="./applications-admin.php">Applications</a>
-            </li>
+            <?php if($_SESSION['role'] == 'admin') : ?>
+                <li class="nav-item">
+                <a class="nav-link text-light" href="./admin_profile.php">Admin Profile</a>
+            <?php endif; ?>
+            <?php if($_SESSION['role'] == 'student') : ?>
+                <li class="nav-item">
+                <a class="nav-link text-light" href="./student_profile.php">Student Profile</a>
+            <?php endif; ?>
         </ul>
         </div>
     </div>
