@@ -97,7 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['removeName'])) {
     ?>
     <div class="container mt-5">
         <div id="student-functionalities" class="mt-4 row justify-content-center text-center">
-            <h2 class="h2">Current Programs</h2>
+            <h1 class="h1">Current Programs</h1>
             <?php
             $studentQuery = "SELECT * FROM programs";
             $studentResult = mysqli_query($mysql, $studentQuery);
