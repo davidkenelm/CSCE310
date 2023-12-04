@@ -21,6 +21,7 @@ include 'config.php';
                 <li class="nav-item"><a class="nav-link" href="#admin-functionalities">Admin Functionalities</a></li>
                 <li class="nav-item"><a class="nav-link" href="#student-functionalities">Student Functionalities</a></li>
                 <li class="nav-item"><a class="nav-link" href="./event_admin.php">Events</a></li>
+                <li class="nav-item"><a class="nav-link" href="./document_student.php">Document Upload</a></li>
             </ul>
         </nav>
 
