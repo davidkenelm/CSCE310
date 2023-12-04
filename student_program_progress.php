@@ -226,20 +226,20 @@ include 'config.php';
         // Close the statement
         $stmt->close();
         }
-        $show;
+        $showInsertCert;
         if (isset($_POST['showInsertCert'])){
-          $show = $_POST['showInsertCert'];
-          if ($show == 'show'){
-            $show = "no";
+          $showInsertCert = $_POST['showInsertCert'];
+          if ($showInsertCert == 'show'){
+            $showInsertCert = "no";
           }else {
-            $show = "show";
+            $showInsertCert = "show";
           }
         }else{
-          $show = "show";
+          $showInsertCert = "show";
         }
         
         echo "<form method = 'POST' action = '" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>
-        <input type = 'hidden' name = 'showInsertCert' value = " . $show . ">
+        <input type = 'hidden' name = 'showInsertCert' value = " . $showInsertCert . ">
         <button type = 'submit'>Insert Certification for this Program</button>
         <input type='hidden' name='programNum' value='" . $programNum . "'>
         <input type='hidden' name='studentID' value='" . $specific_student_id . "'>
@@ -334,7 +334,7 @@ include 'config.php';
                   echo "<option value='$option' $selected>$option</option>";
               }
               echo "</select>";
-              echo "<input type='submit' name='updateCert' value='Update Certification'>";
+              echo "<input type='submit' name='updateClass' value='Update Certification'>";
               echo "<input type='hidden' name='programNum' value='" . $programNum . "'>";
               echo "<input type='hidden' name='studentID' value='" . $specific_student_id . "'>";
               echo "<input type='hidden' name = 'showDetails' value='showDetails'>";
@@ -378,6 +378,81 @@ include 'config.php';
 
     
     }
+    $showInsertClass;
+        if (isset($_POST['showInsertClass'])){
+          $showInsertClass = $_POST['showInsertClass'];
+          if ($showInsertClass == 'show'){
+            $showInsertClass = "no";
+          }else {
+            $showInsertClass = "show";
+          }
+        }else{
+          $showInsertClass = "show";
+        }
+        
+        echo "<form method = 'POST' action = '" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>
+        <input type = 'hidden' name = 'showInsertClass' value = " . $showInsertClass . ">
+        <button type = 'submit'>Insert Class Enrolled</button>
+        <input type='hidden' name='programNum' value='" . $programNum . "'>
+        <input type='hidden' name='studentID' value='" . $specific_student_id . "'>
+        <input type='hidden' name = 'showDetails' value='showDetails'>
+        </form>";
+
+        if(isset($_POST['showInsertClass']) && $_POST['showInsertClass']=='show'){
+          echo "<br></br>";
+          $sql = "SELECT classes.Name, classes.Class_ID FROM classes LEFT JOIN class_enrollment ON classes.Class_ID = class_enrollment.CE_NUM   AND class_enrollment.UIN = ? WHERE class_enrollment.CE_NUM IS NULL";
+          $stmt = $mysql->prepare($sql);
+  
+          // Bind the parameter
+          $stmt->bind_param("i",$specific_student_id); // Assuming student_ID is an integer
+  
+          // Execute the query
+          $stmt->execute();
+  
+          // Get the result
+          $result = $stmt->get_result();
+          $classes = [];
+
+          // Fetch associative array rows from the result set
+          while ($row = $result->fetch_assoc()) {
+              // Append each row to the $certifications array
+              $classes[] = [
+                'Name' => $row['Name'],
+                'Class_ID' => $row['Class_ID']
+            ]; // Assuming 'Name' is the column name for the certification name
+          }
+
+          // Now $certifications array contains all the certification names
+          $stmt->close();
+          echo "<form method='POST' action= '" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>
+    <label for='classes'>Class:</label>
+    <select id='class' name='class'>";
+        
+        foreach ($classes as $class) {
+            echo "<option value='" . $class['Class_ID'] . "'>" . $class['Name'] . "</option>";
+        }
+        
+        
+    echo "</select>
+
+    <label for='semester'>Semester:</label>
+    <select id='semester' name='semester'>
+        <option value='Fall'>Fall</option>
+        <option value='Spring'>Spring</option>
+        <option value='Winter'>Winter</option>
+        <option value='Summer'>Summer</option>
+    </select>
+
+    <label for='year'>Year:</label>
+    <input type='text' id='year' name='year'>
+
+    <input type='submit' name='submitNewClass' value='Submit'>
+    <input type='hidden' name='programNum' value='" . $programNum . "'>
+    <input type='hidden' name='studentID' value='" . $specific_student_id . "'>
+    <input type='hidden' name = 'showDetails' value='showDetails'>
+</form>";
+        }
+
 
 }
   }
@@ -426,6 +501,44 @@ include 'config.php';
 // Bind parameters and execute the statement
 
 }
+if (isset($_POST['updateClass']) && !empty($_POST['status']) && !empty($_POST['studentID'])) {
+  // Process the "Update Certification" form here
+  // ...
+  // Display the form for "Update Certification" outside the table
+  $sql = "UPDATE class_enrollment SET Status = ? Where CE_NUM = ?";
+
+  $stmt = $mysql->prepare($sql);
+
+  $stmt->bind_param("si",$_POST['status'],$_POST['class_id']);
+  $stmt->execute();
+
+
+echo "<form id='autoForm' method='POST' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>";
+            
+
+echo "<input type='hidden' name='programNum' value='" . $_POST['programNum'] . "'>";
+echo "<input type='hidden' name='studentID' value='" . $_POST['studentID'] . "'>";
+echo "<input type='hidden' name = 'showDetails' value='showDetails'>";
+
+echo "</form>";
+
+echo "
+<script>
+// Simulating automatic form submission after 3 seconds
+setTimeout(function() {
+  document.getElementById('autoForm').submit();
+}, 0); // 1000 milliseconds (1 seconds)
+</script>
+";
+
+
+
+// Close the statement
+$stmt->close();
+
+// Bind parameters and execute the statement
+
+}
 if (isset($_POST['updateTrainingCert']) && !empty($_POST['status']) && !empty($_POST['studentID'])) {
   // Process the "Update Certification" form here
   // ...
@@ -469,6 +582,41 @@ setTimeout(function() {
 $stmt->close();
 
 // Bind parameters and execute the statement
+
+}
+
+if (isset($_POST['submitNewClass']) && !empty($_POST['programNum']) && !empty($_POST['studentID'])) {
+  $status = 'Not Started';
+
+// Prepare the SQL statement
+$sql = "INSERT INTO class_enrollment (UIN, Class_ID, Status, Semester, Year) 
+        VALUES (?, ?, ?, ?, ?)";
+$stmt = $mysql->prepare($sql);
+
+// Bind parameters and execute the query
+$stmt->bind_param("iisss", $_POST['studentID'], $_POST['class'], $status, $_POST['semester'], $_POST['year']);
+$stmt->execute();
+
+// Close the statement
+$stmt->close();
+echo "<form id='autoForm' method='POST' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>";
+            
+
+echo "<input type='hidden' name='programNum' value='" . $_POST['programNum'] . "'>";
+echo "<input type='hidden' name='studentID' value='" . $_POST['studentID'] . "'>";
+echo "<input type='hidden' name = 'showDetails' value='showDetails'>";
+echo "<input type='hidden' name='ce_id' value='" . $_POST['ce_id'] . "'>";
+
+echo "</form>";
+
+echo "
+<script>
+// Simulating automatic form submission after 3 seconds
+setTimeout(function() {
+  document.getElementById('autoForm').submit();
+}, 0); // 1000 milliseconds (1 seconds)
+</script>
+";
 
 }
 if (isset($_POST['submitNewCert']) && !empty($_POST['programNum']) && !empty($_POST['studentID'])) {
@@ -539,6 +687,38 @@ setTimeout(function() {
 ";
 
 }
+if (isset($_POST['deleteClass']) && !empty($_POST['programNum']) && !empty($_POST['studentID'])) {
+
+
+  // Prepare the SQL statement
+  $sql = "DELETE FROM class_enrollment WHERE CE_NUM = ?";
+  $stmt = $mysql->prepare($sql);
+  
+  // Bind parameters and execute the query
+  $stmt->bind_param("i",$_POST['class_id']);
+  $stmt->execute();
+  
+  // Close the statement
+  $stmt->close();
+  echo "<form id='autoForm' method='POST' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>";
+              
+  
+  echo "<input type='hidden' name='programNum' value='" . $_POST['programNum'] . "'>";
+  echo "<input type='hidden' name='studentID' value='" . $_POST['studentID'] . "'>";
+  echo "<input type='hidden' name = 'showDetails' value='showDetails'>";
+  
+  echo "</form>";
+  
+  echo "
+  <script>
+  // Simulating automatic form submission after 3 seconds
+  setTimeout(function() {
+    document.getElementById('autoForm').submit();
+  }, 0); // 1000 milliseconds (1 seconds)
+  </script>
+  ";
+  
+  }
 
   }
 
