@@ -400,7 +400,7 @@ include 'config.php';
 
         if(isset($_POST['showInsertClass']) && $_POST['showInsertClass']=='show'){
           echo "<br></br>";
-          $sql = "SELECT classes.Name, classes.Class_ID FROM classes LEFT JOIN class_enrollment ON classes.Class_ID = class_enrollment.CE_NUM   AND class_enrollment.UIN = ? WHERE class_enrollment.CE_NUM IS NULL";
+          $sql = "SELECT classes.Name, classes.Class_ID FROM classes LEFT JOIN class_enrollment ON classes.Class_ID = class_enrollment.Class_ID   AND class_enrollment.UIN = ? WHERE class_enrollment.CE_NUM IS NULL";
           $stmt = $mysql->prepare($sql);
   
           // Bind the parameter
@@ -447,6 +447,151 @@ include 'config.php';
     <input type='text' id='year' name='year'>
 
     <input type='submit' name='submitNewClass' value='Submit'>
+    <input type='hidden' name='programNum' value='" . $programNum . "'>
+    <input type='hidden' name='studentID' value='" . $specific_student_id . "'>
+    <input type='hidden' name = 'showDetails' value='showDetails'>
+</form>";
+        }
+
+        $sql = "SELECT * FROM intern_app INNER JOIN internships ON intern_app.Intern_ID = internships.Intern_ID where UIN = ?";
+        $stmt = $mysql->prepare($sql);
+
+        // Bind the parameter
+        $stmt->bind_param("i", $specific_student_id); // Assuming student_ID is an integer
+
+        // Execute the query
+        $stmt->execute();
+
+        // Get the result
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+          // Start table formatting
+          echo "<h3>Student's Internships</h3>";
+          echo "<table border='1' style='width: 100%;'>";
+          echo "<tr><th>Internship</th><th>Status</th><th>Year</th><th>Delete</th></tr>";
+
+          // Loop through the result set and display data in table rows
+          while ($row = $result->fetch_assoc()) {
+              echo "<tr>";
+              echo "<td>" . $row['Name'] . "</td>"; // Modify column names as needed
+              echo "<td>";
+              echo "<form method='POST' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>";
+              
+              // Create a dropdown for Status
+              echo "<select name='status' onchange='submitForm(" . $programNum . ")'>";
+              $statusOptions = ['Not Started','In Progress', 'Finished']; // Replace with your status options
+              foreach ($statusOptions as $option) {
+                  $selected = ($option === $row['Status']) ? 'selected' : '';
+                  echo "<option value='$option' $selected>$option</option>";
+              }
+              echo "</select>";
+              echo "<input type='submit' name='updateIntern' value='Update Internship'>";
+              echo "<input type='hidden' name='programNum' value='" . $programNum . "'>";
+              echo "<input type='hidden' name='studentID' value='" . $specific_student_id . "'>";
+              echo "<input type='hidden' name = 'showDetails' value='showDetails'>";
+              echo "<input type='hidden' name='intern_id' value='" . $row['IA_Num'] . "'>";
+              
+              echo "</form>";
+              echo "</td>"; // Modify column names as needed
+              echo "<td>" . $row['Year'] . "</td>";
+              echo "<td>";
+              echo "<form method='POST' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>";
+              echo "<input type='submit' name='deleteIntern' value='Delete'>";
+              echo "<input type='hidden' name='programNum' value='" . $programNum . "'>";
+              echo "<input type='hidden' name='studentID' value='" . $specific_student_id . "'>";
+              echo "<input type='hidden' name = 'showDetails' value='showDetails'>";
+              echo "<input type='hidden' name='intern_id' value='" . $row['IA_Num'] . "'>";
+              echo "</form>";
+              echo "</td>";
+              
+              
+              // Button column with a form to fetch and display additional information
+              
+
+              echo "</tr>";
+              
+          }
+
+          // Close table
+          echo "</table>";
+        // Close the statement
+        $stmt->close();
+
+
+
+
+
+    
+    
+    // Fetch and display additional details for the specific program
+    // Modify this part to fetch and display details from your database
+
+    
+    }
+    $showInsertIntern;
+        if (isset($_POST['showInsertIntern'])){
+          $showInsertIntern = $_POST['showInsertIntern'];
+          if ($showInsertIntern == 'show'){
+            $showInsertIntern = "no";
+          }else {
+            $showInsertIntern = "show";
+          }
+        }else{
+          $showInsertIntern = "show";
+        }
+        
+        echo "<form method = 'POST' action = '" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>
+        <input type = 'hidden' name = 'showInsertIntern' value = " . $showInsertIntern . ">
+        <button type = 'submit'>Insert Internship</button>
+        <input type='hidden' name='programNum' value='" . $programNum . "'>
+        <input type='hidden' name='studentID' value='" . $specific_student_id . "'>
+        <input type='hidden' name = 'showDetails' value='showDetails'>
+        </form>";
+
+        if(isset($_POST['showInsertIntern']) && $_POST['showInsertIntern']=='show'){
+          echo "<br></br>";
+          $sql = "SELECT internships.Name, internships.Intern_ID FROM internships LEFT JOIN intern_app ON internships.Intern_ID = intern_app.Intern_ID   AND intern_app.UIN = ? WHERE intern_app.IA_Num IS NULL";
+          $stmt = $mysql->prepare($sql);
+  
+          // Bind the parameter
+          $stmt->bind_param("i",$specific_student_id); // Assuming student_ID is an integer
+  
+          // Execute the query
+          $stmt->execute();
+  
+          // Get the result
+          $result = $stmt->get_result();
+          $internships = [];
+
+          // Fetch associative array rows from the result set
+          while ($row = $result->fetch_assoc()) {
+              // Append each row to the $certifications array
+              $internships[] = [
+                'Name' => $row['Name'],
+                'Intern_ID' => $row['Intern_ID']
+            ]; // Assuming 'Name' is the column name for the certification name
+          }
+
+          // Now $certifications array contains all the certification names
+          $stmt->close();
+          echo "<form method='POST' action= '" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>
+    <label for='internships'>Internship:</label>
+    <select id='intern' name='intern'>";
+        
+        foreach ($internships as $internship) {
+            echo "<option value='" . $internship['Intern_ID'] . "'>" . $internship['Name'] . "</option>";
+        }
+        
+        
+    echo "</select>
+
+
+
+    <label for='year'>Year:</label>
+    <input type='text' id='year' name='year'>
+
+    <input type='submit' name='submitNewIntern' value='Submit'>
     <input type='hidden' name='programNum' value='" . $programNum . "'>
     <input type='hidden' name='studentID' value='" . $specific_student_id . "'>
     <input type='hidden' name = 'showDetails' value='showDetails'>
