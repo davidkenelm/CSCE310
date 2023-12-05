@@ -74,7 +74,7 @@ include 'config.php';
     
     
       
-      $specific_student_id = 2439;
+      $specific_student_id = $_SESSION['UIN'];
        // Retrieve the studentID from the form
        $sql = "SELECT * FROM users WHERE UIN = ?";
         // Prepare a statement
