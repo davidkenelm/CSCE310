@@ -74,7 +74,7 @@ include 'config.php';
     
     
       
-      $specific_student_id = 2939;
+      $specific_student_id = 2439;
        // Retrieve the studentID from the form
        $sql = "SELECT * FROM users WHERE UIN = ?";
         // Prepare a statement
@@ -94,6 +94,8 @@ include 'config.php';
         $full_name = $row['First_Name'] . " " . $row['Last_Name'];
 
         $stmt->close();
+
+        
  
         // Prepare the query to fetch student information based on student_ID
         $sql = "SELECT * FROM track JOIN programs ON track.Program_Num = programs.Program_Num WHERE track.Student_Num = ?";
@@ -150,7 +152,7 @@ include 'config.php';
               echo "<input type='submit' name='showDetails' value='Close Details'>";
               echo "</form>";
     } else {
-        echo "Student ID is empty.";
+        echo "Student ID is not listed into any programs.";
     }
   
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
