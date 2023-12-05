@@ -1,6 +1,47 @@
 <?php
 include 'config.php';
 
+
+if (!isset($_SESSION['UIN'])) {
+    // Redirect or handle the case where the user is not logged in
+    header("Location: login.php"); // Adjust the redirection URL
+    exit();
+}
+
+$uin = $_SESSION['UIN'];
+
+function getApplications($mysql, $uin) {
+    $applications = array();
+
+    // Query applications based on the user's UIN
+    $sql = "SELECT DISTINCT App_Num FROM applications WHERE UIN = '$uin'";
+    $result = $mysql->query($sql);
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $applications[] = $row['App_Num'];
+        }
+    }
+
+    return $applications;
+}
+
+// Example function to display dropdowns
+function displayApplicationDropdowns($mysql, $uin) {
+    $applications = getApplications($mysql, $uin);
+
+    if (!empty($applications)) {
+        echo '<label for="appNum">Select Application Number:</label>';
+        echo '<select name="appNum" required>';
+        foreach ($applications as $appNum) {
+            echo "<option value=\"$appNum\">$appNum</option>";
+        }
+        echo '</select>';
+    } else {
+        echo 'No applications available for this user.';
+    }
+}
+
 function displayDocuments($mysql, $appNum) {
     $sql = "SELECT * FROM documentation WHERE App_Num = '$appNum'";
     $result = $mysql->query($sql);
@@ -122,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document Upload and Management</title>
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <style>
         .popup {
             display: none;
@@ -174,48 +215,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 </head>
 <body>
-    <h1>Document Upload and Management</h1>
-
-    <h2>Upload Document</h2>
-    <form action="document_student.php" method="post" enctype="multipart/form-data">
-        <label for="appNum">Application Number:</label>
-        <input type="text" name="appNum" required>
-        
-        <label for="file">Choose File:</label>
-        <input type="file" name="file" required>
-        
-        <button type="submit" name="submit">Upload</button>
-    </form>
-
-    <h2>View Documents</h2>
-    <form action="" method="get">
-        <label for="appNumView">Application Number:</label>
-        <input type="text" name="appNum" required>
-        <button type="submit">View Documents</button>
-    </form>
-
-    <?php
-    if (isset($_GET['appNum'])) {
-        $appNum = $_GET['appNum'];
-        displayDocuments($mysql, $appNum);
-    }
+    <?php 
+        include 'navbar.php';
     ?>
+    <div class="container mt-5">
+        <h1 class="mb-4">Document Upload and Management</h1>
 
-    <div class="popup" id="popup">
-        <span class="close-btn" onclick="closePopup()">X</span>
-        <form id="editForm" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
-            <label for="field1">Application Number:</label>
-            <input type="text" id="field1" name="field1" required>
-
-            <label for="field2">Document Type:</label>
-            <input type="text" id="field2" name="field2" required>
-
-            <label for="fileInput">Choose New File:</label>
-            <input type="file" id="fileInput" name="fileInput">
-
-            <input type="hidden" id="docNumInput" name="docNum" value="">
-            <button type="submit">Submit</button>
+        <!-- Upload Document -->
+        <h2>Upload Document</h2>
+        <form action="document_student.php" method="post" enctype="multipart/form-data">
+            <?php displayApplicationDropdowns($mysql, $uin); ?>
+            
+            <div class="mb-3">
+                <label for="file" class="form-label">Choose File:</label>
+                <input type="file" name="file" class="form-control" required>
+            </div>
+            
+            <button type="submit" name="submit" class="btn btn-primary">Upload</button>
         </form>
+
+        <!-- View Documents -->
+        <h2 class="mt-4">View Documents</h2>
+        <form action="" method="get">
+            <?php displayApplicationDropdowns($mysql, $uin); ?>
+            <button type="submit" class="btn btn-primary">View Documents</button>
+        </form>
+
+        <?php
+        if (isset($_GET['appNum'])) {
+            $appNum = $_GET['appNum'];
+            displayDocuments($mysql, $appNum);
+        }
+        ?>
+
+        <!-- Popup for Editing Documents -->
+        <div class="popup" id="popup">
+            <span class="close-btn" onclick="closePopup()">X</span>
+            <form id="editForm" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="field1" class="form-label">Application Number:</label>
+                    <input type="text" id="field1" name="field1" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="field2" class="form-label">Document Type:</label>
+                    <input type="text" id="field2" name="field2" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="fileInput" class="form-label">Choose New File:</label>
+                    <input type="file" id="fileInput" name="fileInput" class="form-control">
+                </div>
+
+                <input type="hidden" id="docNumInput" name="docNum" value="">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
     </div>
 
 </body>

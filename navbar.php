@@ -17,10 +17,12 @@
             <?php if($_SESSION['role'] == 'admin') : ?>
                 <li class="nav-item">
                 <a class="nav-link text-light" href="./admin_profile.php">Admin Profile</a>
+                <a class="nav-link text-light" href="./event_admin.php">Event Management</a>
             <?php endif; ?>
             <?php if($_SESSION['role'] == 'student') : ?>
                 <li class="nav-item">
                 <a class="nav-link text-light" href="./student_profile.php">Student Profile</a>
+                <a class="nav-link text-light" href="./document_student.php">Documents</a>
             <?php endif; ?>
         </ul>
         </div>
