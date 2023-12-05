@@ -34,7 +34,7 @@ CREATE TABLE `applications` (
   KEY `UIN_app_idx` (`UIN`),
   CONSTRAINT `Program_Num_app` FOREIGN KEY (`Program_Num`) REFERENCES `programs` (`Program_Num`),
   CONSTRAINT `UIN_app` FOREIGN KEY (`UIN`) REFERENCES `college_student` (`UIN`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,6 +43,7 @@ CREATE TABLE `applications` (
 
 LOCK TABLES `applications` WRITE;
 /*!40000 ALTER TABLE `applications` DISABLE KEYS */;
+INSERT INTO `applications` VALUES (16,16,730002164,'Gamer #1 Certificate','#1 Victory Royale','fortnite battle pass');
 /*!40000 ALTER TABLE `applications` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -196,6 +197,7 @@ CREATE TABLE `college_student` (
 
 LOCK TABLES `college_student` WRITE;
 /*!40000 ALTER TABLE `college_student` DISABLE KEYS */;
+INSERT INTO `college_student` VALUES (730002164,'Male',NULL,'Asian',NULL,NULL,'2002-05-05',3.63,'Computer Engineering','','',2089,'Engineering','Senior',1234567890,'Student');
 /*!40000 ALTER TABLE `college_student` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -353,8 +355,9 @@ CREATE TABLE `programs` (
   `Program_Num` int NOT NULL AUTO_INCREMENT,
   `Name` varchar(45) DEFAULT NULL,
   `Description` varchar(5000) DEFAULT NULL,
+  `isDeleted` binary(1) DEFAULT NULL,
   PRIMARY KEY (`Program_Num`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -363,6 +366,7 @@ CREATE TABLE `programs` (
 
 LOCK TABLES `programs` WRITE;
 /*!40000 ALTER TABLE `programs` DISABLE KEYS */;
+INSERT INTO `programs` VALUES (1,'Competitive Cars 1 Watching','Kachow!!!!',NULL),(12,'potato throwing','behind you',NULL),(14,'duck duck goose','duck',NULL),(16,'gamers rise up','fight discrimination ',NULL),(18,'I AM SPEED','i eat losers for breakfast',NULL),(20,'batman','MARTHA!!!',NULL),(22,'Archery','competitive bow shooting, crossbows disallowed, no skill',NULL),(23,'Fishing Dogs','caught one!',NULL);
 /*!40000 ALTER TABLE `programs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -382,7 +386,7 @@ CREATE TABLE `track` (
   KEY `UIN_track_idx` (`Student_Num`),
   CONSTRAINT `Program_Num_track` FOREIGN KEY (`Program_Num`) REFERENCES `programs` (`Program_Num`),
   CONSTRAINT `UIN_track` FOREIGN KEY (`Student_Num`) REFERENCES `college_student` (`UIN`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -391,6 +395,7 @@ CREATE TABLE `track` (
 
 LOCK TABLES `track` WRITE;
 /*!40000 ALTER TABLE `track` DISABLE KEYS */;
+INSERT INTO `track` VALUES (3,16,730002164);
 /*!40000 ALTER TABLE `track` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -415,30 +420,13 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE VIEW event_information AS
-SELECT
-    e.Event_ID,
-    e.UIN,
-    e.Program_Num,
-    e.Start_Date,
-    e.Time,
-    e.Location,
-    e.End_Date,
-    e.Event_Type,
-    COUNT(et.UIN) AS Attendee_Count
-FROM
-    events e
-LEFT JOIN
-    event_tracking et ON e.Event_ID = et.Event_ID
-GROUP BY
-    e.Event_ID, e.UIN, e.Program_Num, e.Start_Date, e.Time, e.Location, e.End_Date, e.Event_Type;
-
 --
 -- Dumping data for table `users`
 --
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (730002164,'Sohaib','A','Raja','username','pass','Student','raja@mail.com','discord');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -451,4 +439,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-11-27  9:24:32
+-- Dump completed on 2023-12-05 16:36:20
