@@ -18,28 +18,27 @@
         ?>
     <form method='post'>
         <div class="form-group">
-            <label for="exampleInputEmail1">Email address</label>
-            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email_input">
-            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            <label for="exampleInputEmail1">Username</label>
+            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username" name="email_input">
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Password</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password_input">
-        </div>
-        <div class="form-group form-check">
-            <input type="checkbox" class="form-check-input" id="exampleCheck1">
-            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Enter password" name="password_input">
         </div>
         <button type="submit" class="btn btn-primary" name="login_button" value="Login Button">Submit</button>
-        <button type="submit" class="btn btn-primary" name="new_user_button">Create User</button>
+        <button type="submit" class="btn btn-primary" name="new_student_button">Create Student User</button>
+        <button type="submit" class="btn btn-primary" name="new_admin_button">Create Admin User</button>
     </form>
 
     <?php
         if(array_key_exists('login_button', $_POST)) {
             login(); 
         }
-        if(array_key_exists('new_user_button', $_POST)) {
-            new_user(); 
+        if(array_key_exists('new_student_button', $_POST)) {
+            new_student(); 
+        }
+        if(array_key_exists('new_admin_button', $_POST)) {
+            new_admin(); 
         }
         function login() {
             $username = $_POST['email_input'];
@@ -62,8 +61,11 @@
                 echo "duplicate user detected";
             }
         }
-        function new_user() {
-            header("Location: http://localhost/CSCE310/create_user.php");
+        function new_student() {
+            header("Location: http://localhost/CSCE310/create_student.php");
+        }
+        function new_admin() {
+            header("Location: http://localhost/CSCE310/create_admin.php");
         }
     ?>
 

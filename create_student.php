@@ -27,25 +27,6 @@
             <input type="text" class="form-control" name="password_input" aria-label="Recipient's username" aria-describedby="button-addon2">
         </div>
         <div class="form-group">
-            <label>Role</label>
-            <div id="emailHelp" class="form-text">The default role is student.</div>
-            <div id="emailHelp" class="form-text">If you wish to create an administrator account, please enter a set of existing credentials below</div>
-            <div id="emailHelp" class="form-text">(Otherwise leave them empty)</div>
-            <select class="form-select" aria-label="Default select example" name="role_select">
-                <option selected>Choose Role</option>
-                <option value="student">Student</option>
-                <option value="admin">Admin</option>
-            </select>
-            <div class="row g-3">
-                <div class="col">
-                    <input type="text" class="form-control" name="admin_username" placeholder="admin username" aria-label="First name">
-                </div>
-                <div class="col">
-                    <input type="text" class="form-control" name="admin_password" placeholder="admin password" aria-label="Last name">
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
             <label>First Name</label>
             <input type="text" class="form-control" name="fname_input" aria-label="Recipient's username" aria-describedby="button-addon2">
         </div>
@@ -73,36 +54,19 @@
             $sql = $_SESSION['sql'];
             $username = $_POST['username_input'];
             $password = $_POST['password_input'];
-            $role = $_POST['role_select'];
-            $admin_username = $_POST['admin_username'];
-            $admin_password = $_POST['admin_password'];
+            $role = "student";
             $fname = $_POST['fname_input'];
             $middle_initial = $_POST['middle_input'];
             $lname = $_POST['lname_input'];
             $email = $_POST['email_input'];
             $discord = $_POST['discord_input'];
-            create_user($sql, $username, $password, $role, $admin_username, $admin_password, $fname, $middle_initial, $lname, $email, $discord);
+            create_user($sql, $username, $password, $role, $fname, $middle_initial, $lname, $email, $discord);
         }
-        function create_user($sql, $username, $password, $role, $admin_username, $admin_password, $fname, $middle_initial, $lname, $email, $discord) {
+        function create_user($sql, $username, $password, $role, $fname, $middle_initial, $lname, $email, $discord) {
             $uinQuery = "SELECT max(UIN) FROM users;";
             $uinResult = mysqli_query($sql, $uinQuery);
             $uinRow = mysqli_fetch_assoc($uinResult);
             $newUIN = $uinRow['max(UIN)'] + 1;
-            if ($role == "admin") {
-                echo "creating admin account\n";
-                $adminQuery = "SELECT * FROM users WHERE Username='$admin_username' AND Password='$admin_password'";
-                $adminResult = mysqli_query($sql, $adminQuery);
-                $adminRow = mysqli_fetch_assoc($adminResult);
-                if (mysqli_num_rows($adminResult) == 0 || $adminRow['User_Type'] != "admin") {
-                    echo "Incorrect admin credentials\n";
-                    /*echo $username;
-                    echo $password;
-                    echo $adminRow['Username'];
-                    echo $adminRow['Password'];
-                    echo $adminRow['User_Type'];*/
-                    return;
-                }
-            }
             $insertQuery =  "INSERT INTO users VALUES ($newUIN, '$fname', '$middle_initial', '$lname', '$username', '$password', '$role', '$email', '$discord')";
             if ($sql->query($insertQuery)) {
                 echo "New user successfully created\n";

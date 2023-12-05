@@ -56,6 +56,7 @@
         <div class="form-group">
             <label>Role</label>
             <input type="text" class="form-control" placeholder="<?php echo $role; ?>" name="role_field" disabled>
+            <button class="btn btn-outline-secondary" type="submit" name="demote_button">Revoke Admin Priveliges</button>
         </div>
         <div class="form-group">
             <label>First Name</label>
@@ -113,6 +114,10 @@
         if(array_key_exists('discord_button', $_POST)) {
             $value = $_POST['discord_input'];
             update_user($sql, $UIN, "Discord_Name", "$value"); 
+        }
+        if(array_key_exists('demote_button', $_POST)) {
+            update_user($sql, $UIN, "User_Type", "student"); 
+            $_SESSION['role'] = "student";
         }
         if(array_key_exists('delete_button', $_POST)) {
             delete_user($sql, $UIN);
