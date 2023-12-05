@@ -48,6 +48,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         checkAndUpdateField('updated_start_date');
         checkAndUpdateField('updated_time');
         checkAndUpdateField('updated_location');
+        checkAndUpdateField('updated_end_date');
+        checkAndUpdateField('updated_event_type');
         checkAndUpdateField('attendee_uin');
         checkAndUpdateField('remove_attendee_uin');
 
@@ -242,6 +244,18 @@ function updateEvent($mysql, $eventID, $updatedEventData) {
         $setClause .= "Location = ?, ";
         $bindTypes .= 's';
         $bindParams[] = $updatedEventData['updated_location'];
+    }
+
+    if (isset($updatedEventData['updated_end_date'])) {
+        $setClause .= "End_Date = ?, ";
+        $bindTypes .= 's';
+        $bindParams[] = $updatedEventData['updated_end_date'];
+    }
+
+    if (isset($updatedEventData['updated_event_type'])) {
+        $setClause .= "Event_Type = ?, ";
+        $bindTypes .= 's';
+        $bindParams[] = $updatedEventData['updated_event_type'];
     }
     //Add Attendee, independent of update statement
     if (isset($updatedEventData['attendee_uin'])) {
@@ -449,6 +463,15 @@ function viewEvent($mysql, $eventToView) {
             </div>
 
             <div class="mb-3">
+                <label for="updated_end_date" class="form-label">End Date:</label>
+                <input type="date" name="updated_end_date" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label for="updated_event_type" class="form-label">Event Type:</label>
+                <input type="text" name="updated_event_type" class="form-control">
+            </div>
+
+            <div class="mb-3">
                 <label for="attendee_uin" class="form-label">Add Attendee UIN:</label>
                 <input type="text" name="attendee_uin" class="form-control">
             </div>
@@ -481,6 +504,14 @@ function viewEvent($mysql, $eventToView) {
 
             if ($_POST['updated_location'] != '') {
                 $updatedEventData['updated_location'] = $_POST['updated_location'];
+            }
+
+            if ($_POST['updated_end_date'] != '') {
+                $updatedEventData['updated_end_date'] = $_POST['updated_end_date'];
+            }
+
+            if ($_POST['updated_event_type'] != '') {
+                $updatedEventData['updated_event_type'] = $_POST['updated_event_type'];
             }
 
             if ($_POST['attendee_uin'] != '') {
