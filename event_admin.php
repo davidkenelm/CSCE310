@@ -11,6 +11,7 @@ if (!isset($_SESSION['UIN'])) {
 //storing UIN variable for use in insertion
 $uin = $_SESSION['UIN'];
 
+//Logic for event creation, uses uin from session variable
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['create_event'])) {
         $eventData = array(
@@ -183,7 +184,7 @@ function removeAttendee($mysql, $eventID, $attendeeUIN) {
     $deleteStmt->close();
 }
 
-
+//updating event data
 function updateEvent($mysql, $eventID, $updatedEventData) {
     $setClause = '';
     $bindTypes = ''; 
@@ -210,7 +211,7 @@ function updateEvent($mysql, $eventID, $updatedEventData) {
     if (isset($updatedEventData['attendee_uin'])) {
         addAttendee($mysql, $eventID, $updatedEventData['attendee_uin']);
     }
-
+    //Remove attendee, independent of update statement
     if (isset($updatedEventData['remove_attendee_uin'])) {
         removeAttendee($mysql, $eventID, $updatedEventData['remove_attendee_uin']);
     }
@@ -245,6 +246,7 @@ function updateEvent($mysql, $eventID, $updatedEventData) {
 
 //Deletes an event from both events and event_tracking
 function deleteEvent($mysql, $eventID) {
+    //Deleting event_tracking first because it is a child element of events
     $deleteEventTrackingQuery = "DELETE FROM event_tracking WHERE Event_ID = ?";
     $deleteEventTrackingStmt = $mysql->prepare($deleteEventTrackingQuery);
     $deleteEventTrackingStmt->bind_param("i", $eventID);
@@ -256,7 +258,7 @@ function deleteEvent($mysql, $eventID) {
     }
 
     $deleteEventTrackingStmt->close();
-
+    //now event is deleted
     $deleteEventQuery = "DELETE FROM events WHERE Event_ID = ?";
     $deleteEventStmt = $mysql->prepare($deleteEventQuery);
     $deleteEventStmt->bind_param("i", $eventID);
@@ -297,7 +299,7 @@ function viewEvent($mysql, $eventToView) {
                   </tr>';
         
             $row = $result->fetch_assoc();
-            
+            //iputing data into table
             echo '<tr> 
                 <td style="padding: 10px; border: 1px solid #ddd;">'.$row['Event_ID'].'</td> 
                 <td style="padding: 10px; border: 1px solid #ddd;">'.$row['Start_Date'].'</td> 

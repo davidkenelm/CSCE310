@@ -126,7 +126,7 @@ if (isset($_POST['submit'])) {
     } else if (move_uploaded_file($_FILES["file"]["tmp_name"], $targetFile)) {
         $link = $targetFile;
 
-        // Using bind and prepared statements to avoid SQL injection
+        // More bind for sql injections
         $sql = "INSERT INTO documentation (App_Num, Link, Doc_Type) VALUES (?, ?, ?)";
         $stmt = $mysql->prepare($sql);
 
@@ -151,7 +151,7 @@ if (isset($_POST['submit'])) {
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
 }
-
+//Logic for file uploading
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $newAppNum = isset($_POST['application_num']) ? $_POST['application_num'] : '';
     $newDocType = isset($_POST['file_type']) ? $_POST['file_type'] : '';
@@ -162,7 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $targetFile = $targetDir . basename($_FILES["fileInput"]["name"]);
 
         $extension = pathinfo($targetFile, PATHINFO_EXTENSION);
-
+        //checking extensions
         if (!in_array($extension, ['pdf', 'docx'])) {
             echo "You file extension must be .pdf or .docx";
             exit;
@@ -171,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (move_uploaded_file($_FILES["fileInput"]["tmp_name"], $targetFile)) {
             $link = $targetFile;
 
-            // Using bind and prepared statements to avoid SQL injection
+            //Even more binds for further injection protection
             $updateSql = "UPDATE documentation SET App_Num = ?, Doc_Type = ?, Link = ? WHERE Doc_Num = ?";
             $stmt = $mysql->prepare($updateSql);
 
@@ -200,7 +200,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo "Error: " . $mysql->error;
             exit();
         }
-
+        //More beings to ensure no injections
         $stmt->bind_param("ssi", $newAppNum, $newDocType, $docNum);
 
         if ($stmt->execute()) {
@@ -253,6 +253,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     </style>
 
+    <!-- JS script for editing Documents popup-->
     <script>
         function editDocument(docNum, appNum, docType) {
             var popup = document.getElementById('popup');
