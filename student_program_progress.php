@@ -1,6 +1,7 @@
 <?php
 // Include the configuration file to establish the database mysql
 include 'config.php';
+session_start();
 ?>
 
 <!DOCTYPE html>

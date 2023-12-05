@@ -1,6 +1,6 @@
 <?php
 include 'config.php';
-
+session_start();
 
 //Checks to ensure the UIN is set to make sure the user is logged in
 if (!isset($_SESSION['UIN'])) {
