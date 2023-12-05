@@ -44,6 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         //Selective updates
+        checkAndUpdateField('update_program_num');
         checkAndUpdateField('updated_start_date');
         checkAndUpdateField('updated_time');
         checkAndUpdateField('updated_location');
@@ -144,6 +145,7 @@ function updateProgramDropdown($mysql) {
     $allPrograms = getAllProgramNums($mysql);
 
     echo '<select name="program_num" class="form-select" aria-label="Program Num">';
+    echo "<option value=\"''\">----</option>";
     foreach ($allPrograms as $num) {
         echo "<option value=\"$num\">$num</option>";
     }
@@ -218,6 +220,12 @@ function updateEvent($mysql, $eventID, $updatedEventData) {
     $bindTypes = ''; 
     $bindParams = array(); // Array to hold bind parameters
     //Building query from array built earlier
+    if (isset($updatedEventData['update_program_num'])) {
+        $setClause .= "Program_Num = ?, ";
+        $bindTypes .= 'i';
+        $bindParams[] = $updatedEventData['update_program_num'];
+    }
+
     if (isset($updatedEventData['updated_start_date'])) {
         $setClause .= "Start_Date = ?, ";
         $bindTypes .= 's';
@@ -421,6 +429,11 @@ function viewEvent($mysql, $eventToView) {
             </div>
 
             <div class="mb-3">
+                <label for="program_num" class="form-label">Program Num to Update:</label>
+                <?php updateProgramDropdown($mysql); ?>
+            </div>
+
+            <div class="mb-3">
                 <label for="updated_start_date" class="form-label">Updated Start Date:</label>
                 <input type="date" name="updated_start_date" class="form-control">
             </div>
@@ -453,6 +466,10 @@ function viewEvent($mysql, $eventToView) {
             $eventIDToUpdate = $_POST['update_event_id'];
 
             $updatedEventData = array();
+
+            if ($_POST['program_num'] != '') {
+                $updatedEventData['program_num'] = $_POST['program_num'];
+            }
 
             if ($_POST['updated_start_date'] != '') {
                 $updatedEventData['updated_start_date'] = $_POST['updated_start_date'];
