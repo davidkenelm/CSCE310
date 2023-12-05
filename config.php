@@ -1,6 +1,6 @@
 <?php
 
-session_start();
+//session_start();
 
 $db_host = "localhost";
 $db_user = "root";

@@ -20,7 +20,7 @@
         $profileQuery = "SELECT * FROM users WHERE UIN='$UIN'";
         $profileResult = mysqli_query($_SESSION['sql'], $profileQuery);
         if (mysqli_num_rows($profileResult) == 0) {
-            echo "Incorrect username or password";
+            echo "User does not exist";
         }
         else if (mysqli_num_rows($profileResult) == 1){
             $profileRow = mysqli_fetch_assoc($profileResult);
@@ -33,6 +33,32 @@
             $lname = $profileRow['Last_Name'];
             $email = $profileRow['Email'];
             $discord = $profileRow['Discord_Name'];
+        }
+        else {
+            echo "duplicate user detected";
+        }
+        $studentQuery = "SELECT * FROM college_student WHERE UIN='$UIN'";
+        $studentResult = mysqli_query($_SESSION['sql'], $studentQuery);
+        if (mysqli_num_rows($studentResult) == 0) {
+            echo "User does not exist";
+        }
+        else if (mysqli_num_rows($studentResult) == 1){
+            $studentRow = mysqli_fetch_assoc($studentResult);
+            $gender = $studentRow['Gender'];
+            $hispanic = $studentRow['Hispanic_Latino'];
+            $race = $studentRow['Race'];
+            $citizen = $studentRow['US_Citizen'];
+            $generation = $studentRow['First_Generation'];
+            $dob = $studentRow['DOB'];
+            $gpa = $studentRow['GPA'];
+            $major = $studentRow['Major'];
+            $minor1 = $studentRow['Minor #1'];
+            $minor2 = $studentRow['Minor #2'];
+            $grad_year = $studentRow['Expected_Graduation'];
+            $school = $studentRow['School'];
+            $classification = $studentRow['Classification'];
+            $phone = $studentRow['Phone'];
+            $student_type = $studentRow['Student_Type'];
         }
         else {
             echo "duplicate user detected";
@@ -84,12 +110,12 @@
         </div>
         <div class="form-group">
             <label>Gender</label>
-            <input type="text" class="form-control" name="gender_input" aria-label="Recipient's username" aria-describedby="button-addon2">
+            <input type="text" class="form-control" name="gender_input"  placeholder="<?php echo $gender; ?>" aria-label="Recipient's username" aria-describedby="button-addon2">
             <button class="btn btn-outline-secondary" type="submit" name="gender_button">Update</button>
         </div>
         <label>Race</label>
         <select class="form-select" aria-label="Default select example" name="race_select">
-            <option selected>Select</option>
+            <option selected><?php echo $race; ?></option>
             <option value="American Indian or Alaska Native">American Indian or Alaska Native</option>
             <option value="Asian">Asian</option>
             <option value="Black or African American">Black or African American</option>
@@ -98,21 +124,21 @@
         </select>
         <button class="btn btn-outline-secondary" type="submit" name="race_button">Update</button>
         <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" name="hispanic_check">
+            <input class="form-check-input" type="checkbox" value="" name="hispanic_check" <?php if ($hispanic) {echo "checked";} ?>>
             <label class="form-check-label" for="flexCheckDefault">
                 Hispanic or Latino?
             </label>
             <button class="btn btn-outline-secondary" type="submit" name="hispanic_button">Update</button>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" name="citizen_check">
+            <input class="form-check-input" type="checkbox" value="" name="citizen_check" <?php if ($citizen) {echo "checked";} ?>>
             <label class="form-check-label" for="flexCheckChecked">
                 US Citizen?
             </label>
-            <button class="btn btn-outline-secondary" type="submit" name="citizen_button">Update</button>
+            <button class="btn btn-outline-secondary" type="submit" name="citizen_button" >Update</button>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" name="generation_check">
+            <input class="form-check-input" type="checkbox" value="" name="generation_check" <?php if ($generation) {echo "checked";} ?>>
             <label class="form-check-label" for="flexCheckChecked">
                 First Generation?
             </label>
@@ -121,52 +147,52 @@
         <div class="form-group">
             <label>Date of Birth</label>
             <input type="date" name="dob_input"
-            placeholder="dd-mm-yyyy" value=""
+            placeholder="<?php echo $dob; ?>" value=""
             min="1950-01-01" max="2030-12-31" class="input-group date"> 
             <button class="btn btn-outline-secondary" type="submit" name="dob_button">Update</button>
         </div>
         <div class="form-group">
             <label>GPA</label>
-            <input type="number" min="0" max="4" step="0.001" class="form-control" name="gpa_input" aria-label="Recipient's username" aria-describedby="button-addon2">
+            <input type="number" min="0" max="4" step="0.001" class="form-control" name="gpa_input" placeholder="<?php echo $gpa; ?>" aria-label="Recipient's username" aria-describedby="button-addon2">
         </div>
         <div class="form-group">
             <label>Major</label>
-            <input type="text" class="form-control" name="major_input" aria-label="Recipient's username" aria-describedby="button-addon2">
+            <input type="text" class="form-control" name="major_input" placeholder="<?php echo $major; ?>" aria-label="Recipient's username" aria-describedby="button-addon2">
             <button class="btn btn-outline-secondary" type="submit" name="major_button">Update</button>
         </div>
         <div class="form-group">
             <label>Minor #1</label>
-            <input type="text" class="form-control" name="minor1_input" aria-label="Recipient's username" aria-describedby="button-addon2">
+            <input type="text" class="form-control" name="minor1_input" placeholder="<?php echo $minor1; ?>" aria-label="Recipient's username" aria-describedby="button-addon2">
             <button class="btn btn-outline-secondary" type="submit" name="minor1_button">Update</button>
         </div>
         <div class="form-group">
             <label>Minor #2</label>
-            <input type="text" class="form-control" name="minor2_input" aria-label="Recipient's username" aria-describedby="button-addon2">
+            <input type="text" class="form-control" name="minor2_input" placeholder="<?php echo $minor2; ?>" aria-label="Recipient's username" aria-describedby="button-addon2">
             <button class="btn btn-outline-secondary" type="submit" name="minor2_button">Update</button>
         </div>
         <div class="form-group">
             <label>Expected Graduation Year</label>
-            <input type="number" min="2023" max="2099" step="1" class="form-control" name="grad_year_input" aria-label="Recipient's username" aria-describedby="button-addon2">
+            <input type="number" min="2023" max="2099" step="1" class="form-control" name="grad_year_input" placeholder="<?php echo $grad_year; ?>" aria-label="Recipient's username" aria-describedby="button-addon2">
             <button class="btn btn-outline-secondary" type="submit" name="grad_year_button">Update</button>
         </div>
         <div class="form-group">
             <label>School</label>
-            <input type="text" class="form-control" name="school_input" aria-label="Recipient's username" aria-describedby="button-addon2">
+            <input type="text" class="form-control" name="school_input" placeholder="<?php echo $school; ?>" aria-label="Recipient's username" aria-describedby="button-addon2">
             <button class="btn btn-outline-secondary" type="submit" name="school_button">Update</button>
         </div>
         <div class="form-group">
             <label>Classification</label>
-            <input type="text" class="form-control" name="classification_input" aria-label="Recipient's username" aria-describedby="button-addon2">
+            <input type="text" class="form-control" name="classification_input" placeholder="<?php echo $classification; ?>" aria-label="Recipient's username" aria-describedby="button-addon2">
             <button class="btn btn-outline-secondary" type="submit" name="classification_button">Update</button>
         </div>
         <div class="form-group">
             <label>Phone # (format 1234567890)</label>
-            <input type="number" min="1000000000" max="9999999999" class="form-control" name="phone_input" aria-label="Recipient's username" aria-describedby="button-addon2">
+            <input type="number" min="1000000000" max="9999999999" class="form-control" name="phone_input" placeholder="<?php echo $phone; ?>" aria-label="Recipient's username" aria-describedby="button-addon2">
             <button class="btn btn-outline-secondary" type="submit" name="phone_button">Update</button>
         </div>
         <div class="form-group">
             <label>Student Type</label>
-            <input type="text" class="form-control" name="student_type_input" aria-label="Recipient's username" aria-describedby="button-addon2">
+            <input type="text" class="form-control" name="student_type_input" placeholder="<?php echo $student_type; ?>" aria-label="Recipient's username" aria-describedby="button-addon2">
             <button class="btn btn-outline-secondary" type="submit" name="student_type_button">Update</button>
         </div>
         <button type="submit" class="btn btn-primary" name="delete_button">Delete User</button>
