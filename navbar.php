@@ -16,13 +16,34 @@
             </li>
             <?php if($_SESSION['role'] == 'admin') : ?>
                 <li class="nav-item">
-                <a class="nav-link text-light" href="./admin_profile.php">Admin Profile</a>
-                <a class="nav-link text-light" href="./event_admin.php">Event Management</a>
+                    <a class="nav-link text-light" href="./admin_profile.php">Admin Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="./event_admin.php">Event Management</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="./programs-admin.php">Program Management</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="./admin_program_information.php">Program Information</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="./admin_program_progress.php">Program Progress</a>
+                </li>
             <?php endif; ?>
             <?php if($_SESSION['role'] == 'student') : ?>
                 <li class="nav-item">
-                <a class="nav-link text-light" href="./student_profile.php">Student Profile</a>
-                <a class="nav-link text-light" href="./document_student.php">Documents</a>
+                    <a class="nav-link text-light" href="./student_profile.php">Student Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="./document_student.php">Documents</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="./student_program_information.php">Program Information</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="./student_program_progress.php">Program Progress</a>
+                </li>
             <?php endif; ?>
         </ul>
         </div>
