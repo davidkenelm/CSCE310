@@ -1,7 +1,7 @@
 <?php
 // Include the configuration file to establish the database mysql
 include 'config.php';
-
+session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['programName']) && isset($_POST['programDescription'])) {
 
