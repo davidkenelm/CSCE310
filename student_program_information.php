@@ -11,7 +11,7 @@ include 'config.php';
   <title>Progress Record Information</title>
 </head>
 <body>
-  <h2>All THINGS Available</h2>
+  <h2>All Initiatives Available</h2>
   <?php
     $sql = "SELECT * FROM classes";
     // Prepare a statement
@@ -63,7 +63,7 @@ include 'config.php';
       // Start table formatting
       echo "<h3>All Certifications Offered</h3>";
       echo "<table border='1' style='width: 100%;'>";
-      echo "<tr><th>Class Name</th><th>Description</th><th>Type</th></tr>";
+      echo "<tr><th>Class Name</th><th>Description</th><th>Level</th></tr>";
 
       // Loop through the result set and display data in table rows
       while ($row = $result->fetch_assoc()) {
