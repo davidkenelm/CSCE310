@@ -11,6 +11,9 @@ include 'config.php';
   <title>Progress Record Information</title>
 </head>
 <body>
+<?php
+    include 'navbar.php';
+    ?>
   <h2>All Initiatives Available</h2>
   <?php
     $sql = "SELECT * FROM classes";

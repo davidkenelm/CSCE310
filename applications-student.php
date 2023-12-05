@@ -1,11 +1,11 @@
 <?php
 // Include the configuration file to establish the database mysql
 include 'config.php';
-
+session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['applicationPNum']) && isset($_POST['applicationUncommon']) && isset($_POST['applicationCommon']) && isset($_POST['applicationPurpose'])) {
 
-    $applicationUIN = '730002164';
+    $applicationUIN = $_SESSION['UIN'];
     $applicationPNum = $_POST["applicationPNum"];
     $applicationUncommon = $_POST["applicationUncommon"];
     $applicationCommon = $_POST["applicationCommon"];
@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['applicationPNum']) && 
 
 }
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['editPNum']) && isset($_POST['editUncommon']) && isset($_POST['editCommon']) && isset($_POST['editPurpose'])) {
-    $editUIN = '730002164';
+    $editUIN = $_SESSION['UIN'];
     $editPNum = $_POST["editPNum"];
     $editUncommon = $_POST["editUncommon"];
     $editCommon = $_POST["editCommon"];
@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['editPNum']) && isset($
     exit();
 }
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['removePNum'])) {
-    $removeUIN = '730002164';
+    $removeUIN = $_SESSION['UIN'];
     $removePNum = $_POST["removePNum"];
 
     $queryTrack = "DELETE FROM track WHERE Program_Num = ? AND Student_Num = ?";
@@ -87,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['removePNum'])) {
         <div id="student-functionalities" class="mt-4 row justify-content-center text-center">
             <h1 class="h1">Your Applications</h1>
             <?php
-            $UIN = '730002164';
+            $UIN = $_SESSION['UIN'];
 
             $applicationQuery = "SELECT programs.Program_Num, programs.Name, applications.Uncom_Cert, applications.Com_Cert, applications.Purpose_Statement
             FROM applications 
@@ -127,7 +127,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['removePNum'])) {
                     <select name="applicationPNum" class="form-select" aria-label="Default select example">
                         <option selected>Select A Program</option>
                         <?php
-                        $UIN = '730002164';
+                        $UIN = $_SESSION['UIN'];
 
                         $applicationQuery = "SELECT programs.Program_Num, programs.Name
                                             FROM programs
@@ -178,7 +178,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['removePNum'])) {
                     <select name="editPNum" class="form-select" aria-label="Default select example">
                         <option selected>Select A Program</option>
                         <?php
-                        $UIN = '730002164';
+                        $UIN = $_SESSION['UIN'];
 
                         $applicationQuery = "SELECT programs.Program_Num, programs.Name, applications.Uncom_Cert, applications.Com_Cert, applications.Purpose_Statement
                                             FROM applications 
@@ -218,7 +218,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['removePNum'])) {
                     <select name="removePNum" class="form-select" aria-label="Default select example">
                         <option selected>Select A Program</option>
                         <?php
-                        $UIN = '730002164';
+                        $UIN = $_SESSION['UIN'];
 
                         $applicationQuery = "SELECT programs.Program_Num, programs.Name, applications.Uncom_Cert, applications.Com_Cert, applications.Purpose_Statement
                                             FROM applications 
