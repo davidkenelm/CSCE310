@@ -35,36 +35,11 @@ include 'config.php';
             margin-bottom: 5px;
         }
     </style>
-    <script>
-        function togglePopup() {
-            var popup = document.getElementById('popup');
-            popup.style.display = (popup.style.display === 'none') ? 'block' : 'none';
-        }
-
-        function submitForm() {
-            var popupContent = document.getElementById('popupContent');
-            popupContent.innerHTML = "SUBMITTED";
-        }
-    </script>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 </head>
 <body>
-<div class="popup" id="popup">
-        <span class="close-btn" onclick="togglePopup()">X</span>
-        <div id="popupContent">
-        <?php
-           echo "<form method='POST' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>"; 
-           echo "<label for='field1'>Field 1:</label>";
-                echo "<input type='text' id='field1' name='field1'>";
 
-                echo "<label for='field2'>Field 2:</label>";
-                echo "<input type='text' id='field2' name='field2'>";
-
-                echo "<button type='submit'>Submit</button>";
-            echo "</form>";
-          ?>
-        </div>
-    </div>
   <h2>Enter Student ID</h2>
   <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
         <label for="studentID">Student ID:</label>

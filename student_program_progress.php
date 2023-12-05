@@ -112,7 +112,7 @@ include 'config.php';
 
 
         // Display the fetched student information as a list
-        echo "<br></br>";
+
         if ($result->num_rows > 0) {
           // Start table formatting
           
@@ -179,7 +179,7 @@ include 'config.php';
         // Display the fetched student information as a list
         if ($result->num_rows > 0) {
           // Start table formatting
-          echo "<h3>Student's Certifications for ". $_POST['programName'] ."</h3>";
+          echo "<h3>My Certifications for ". $_POST['programName'] ."</h3>";
           echo "<table border='1' style='width: 100%;'>";
           echo "<tr><th>Certification</th><th>Status</th><th>Training Status</th><th>Semester</th><th>Year</th><th>Delete</th></tr>";
           
@@ -255,7 +255,7 @@ include 'config.php';
         // Close the statement
         $stmt->close();
         }else{
-          echo "<h3>Student's Certifications for ". $_POST['programName'] ."</h3>";
+          echo "<h3>My Certifications for ". $_POST['programName'] ."</h3>";
           echo "<h4>No Certification records found for this Program</h4>";
         }
         $showInsertCert;
@@ -350,7 +350,7 @@ include 'config.php';
 
         if ($result->num_rows > 0) {
           // Start table formatting
-          echo "<h3>Student's Enrolled Classes</h3>";
+          echo "<h3>My Enrolled Classes</h3>";
           echo "<table border='1' style='width: 100%;'>";
           echo "<tr><th>Class</th><th>Status</th><th>Semester</th><th>Year</th><th>Delete</th></tr>";
 
@@ -415,7 +415,7 @@ include 'config.php';
 
     
     }else{
-      echo "<h3>Student's Enrolled Classes</h3>";
+      echo "<h3>My Enrolled Classes</h3>";
       echo "<h4>No Classes enrolled</h4>";
     }
     $showInsertClass;
@@ -509,7 +509,7 @@ include 'config.php';
 
         if ($result->num_rows > 0) {
           // Start table formatting
-          echo "<h3>Student's Internships</h3>";
+          echo "<h3>My Internships</h3>";
           echo "<table border='1' style='width: 100%;'>";
           echo "<tr><th>Internship</th><th>Status</th><th>Year</th><th>Delete</th></tr>";
 
@@ -573,7 +573,7 @@ include 'config.php';
 
     
     }else{
-      echo "<h3>Student's Internships</h3>";
+      echo "<h3>My Internships</h3>";
       echo "<h4>No Internships Found</h4>";
     }
     $showInsertIntern;
