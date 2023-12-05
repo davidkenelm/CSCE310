@@ -116,12 +116,40 @@ function getAllEventIDs($mysql) {
 function updateEventDropdown($mysql) {
     $allEventIDs = getAllEventIDs($mysql);
 
-    echo '<select name="update_event_id">';
+    echo '<select name="update_event_id" class="form-select" aria-label="Select Event">';
     foreach ($allEventIDs as $id) {
         echo "<option value=\"$id\">$id</option>";
     }
     echo '</select>';
 }
+
+//Gets all available programs for easier event creation
+function getAllProgramNums($mysql) {
+    $programNums = array();
+
+    $sql = 'SELECT Program_Num FROM programs';
+    $result = $mysql->query($sql);
+
+    if ($result) {
+        while ($row = $result->fetch_assoc()) {
+            $programNums[] = $row['Program_Num'];
+        }
+        $result->free_result();
+    }
+
+    return $programNums;
+}
+//Creates dropdown of available programs
+function updateProgramDropdown($mysql) {
+    $allPrograms = getAllProgramNums($mysql);
+
+    echo '<select name="program_num" class="form-select" aria-label="Program Num">';
+    foreach ($allPrograms as $num) {
+        echo "<option value=\"$num\">$num</option>";
+    }
+    echo '</select>';
+}
+
 //Adding attendees to events
 function addAttendee($mysql, $eventID, $attendeeUIN) {
     //checking if an attendee is already registered for an event
@@ -341,7 +369,7 @@ function viewEvent($mysql, $eventToView) {
         <form action="" method="post">
             <div class="mb-3">
                 <label for="program_num" class="form-label">Program Num:</label>
-                <input type="text" class="form-control" name="program_num" required>
+                <?php updateProgramDropdown($mysql); ?>
             </div>
             <div class="mb-3">
                 <label for="start_date" class="form-label">Start Date:</label>
@@ -465,7 +493,7 @@ function viewEvent($mysql, $eventToView) {
 
         <?php
         if (isset($_POST['delete_event'])) {
-            $eventIDToDelete = $_POST['update_event_id'];
+            $eventIDToDelete = $_POST['delete_event_id'];
 
             deleteEvent($mysql, $eventIDToDelete);
         }
