@@ -82,6 +82,93 @@
             <input type="text" class="form-control" name="discord_input" placeholder="<?php echo $discord; ?>" aria-label="Recipient's username" aria-describedby="button-addon2">
             <button class="btn btn-outline-secondary" type="submit" name="discord_button">Update</button>
         </div>
+        <div class="form-group">
+            <label>Gender</label>
+            <input type="text" class="form-control" name="gender_input" aria-label="Recipient's username" aria-describedby="button-addon2">
+            <button class="btn btn-outline-secondary" type="submit" name="gender_button">Update</button>
+        </div>
+        <label>Race</label>
+        <select class="form-select" aria-label="Default select example" name="race_select">
+            <option selected>Select</option>
+            <option value="American Indian or Alaska Native">American Indian or Alaska Native</option>
+            <option value="Asian">Asian</option>
+            <option value="Black or African American">Black or African American</option>
+            <option value="Native Hawaiian or Other Pacific Islander">Native Hawaiian or Other Pacific Islander</option>
+            <option value="White">White</option>
+        </select>
+        <button class="btn btn-outline-secondary" type="submit" name="race_button">Update</button>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" name="hispanic_check">
+            <label class="form-check-label" for="flexCheckDefault">
+                Hispanic or Latino?
+            </label>
+            <button class="btn btn-outline-secondary" type="submit" name="hispanic_button">Update</button>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" name="citizen_check">
+            <label class="form-check-label" for="flexCheckChecked">
+                US Citizen?
+            </label>
+            <button class="btn btn-outline-secondary" type="submit" name="citizen_button">Update</button>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" name="generation_check">
+            <label class="form-check-label" for="flexCheckChecked">
+                First Generation?
+            </label>
+            <button class="btn btn-outline-secondary" type="submit" name="generation_button">Update</button>
+        </div>
+        <div class="form-group">
+            <label>Date of Birth</label>
+            <input type="date" name="dob_input"
+            placeholder="dd-mm-yyyy" value=""
+            min="1950-01-01" max="2030-12-31" class="input-group date"> 
+            <button class="btn btn-outline-secondary" type="submit" name="dob_button">Update</button>
+        </div>
+        <div class="form-group">
+            <label>GPA</label>
+            <input type="number" min="0" max="4" step="0.001" class="form-control" name="gpa_input" aria-label="Recipient's username" aria-describedby="button-addon2">
+        </div>
+        <div class="form-group">
+            <label>Major</label>
+            <input type="text" class="form-control" name="major_input" aria-label="Recipient's username" aria-describedby="button-addon2">
+            <button class="btn btn-outline-secondary" type="submit" name="major_button">Update</button>
+        </div>
+        <div class="form-group">
+            <label>Minor #1</label>
+            <input type="text" class="form-control" name="minor1_input" aria-label="Recipient's username" aria-describedby="button-addon2">
+            <button class="btn btn-outline-secondary" type="submit" name="minor1_button">Update</button>
+        </div>
+        <div class="form-group">
+            <label>Minor #2</label>
+            <input type="text" class="form-control" name="minor2_input" aria-label="Recipient's username" aria-describedby="button-addon2">
+            <button class="btn btn-outline-secondary" type="submit" name="minor2_button">Update</button>
+        </div>
+        <div class="form-group">
+            <label>Expected Graduation Year</label>
+            <input type="number" min="2023" max="2099" step="1" class="form-control" name="grad_year_input" aria-label="Recipient's username" aria-describedby="button-addon2">
+            <button class="btn btn-outline-secondary" type="submit" name="grad_year_button">Update</button>
+        </div>
+        <div class="form-group">
+            <label>School</label>
+            <input type="text" class="form-control" name="school_input" aria-label="Recipient's username" aria-describedby="button-addon2">
+            <button class="btn btn-outline-secondary" type="submit" name="school_button">Update</button>
+        </div>
+        <div class="form-group">
+            <label>Classification</label>
+            <input type="text" class="form-control" name="classification_input" aria-label="Recipient's username" aria-describedby="button-addon2">
+            <button class="btn btn-outline-secondary" type="submit" name="classification_button">Update</button>
+        </div>
+        <div class="form-group">
+            <label>Phone # (format 1234567890)</label>
+            <input type="number" min="1000000000" max="9999999999" class="form-control" name="phone_input" aria-label="Recipient's username" aria-describedby="button-addon2">
+            <button class="btn btn-outline-secondary" type="submit" name="phone_button">Update</button>
+        </div>
+        <div class="form-group">
+            <label>Student Type</label>
+            <input type="text" class="form-control" name="student_type_input" aria-label="Recipient's username" aria-describedby="button-addon2">
+            <button class="btn btn-outline-secondary" type="submit" name="student_type_button">Update</button>
+        </div>
         <button type="submit" class="btn btn-primary" name="delete_button">Delete User</button>
     </form>
 
@@ -114,11 +201,82 @@
             $value = $_POST['discord_input'];
             update_user($sql, $UIN, "Discord_Name", "$value"); 
         }
+        if(array_key_exists('gender_button', $_POST)) {
+            $value = $_POST['gender_input'];
+            update_user($sql, $UIN, "Gender", "$value"); 
+        }
+        if(array_key_exists('race_button', $_POST)) {
+            $value = $_POST['race_select'];
+            update_user($sql, $UIN, "Race", "$value"); 
+        }
+        if(array_key_exists('hispanic_button', $_POST)) {
+            $value = $_POST['hispanic_check'];
+            update_user($sql, $UIN, "Hispanic_Latino", "$value"); 
+        }
+        if(array_key_exists('citizen_button', $_POST)) {
+            $value = $_POST['citizen_check'];
+            update_user($sql, $UIN, "US_Citizen", "$value"); 
+        }
+        if(array_key_exists('generation_button', $_POST)) {
+            $value = $_POST['generation_check'];
+            update_user($sql, $UIN, "First_Generation", "$value"); 
+        }
+        if(array_key_exists('dob_button', $_POST)) {
+            $value = $_POST['dob_input'];
+            update_user($sql, $UIN, "DOB", "$value"); 
+        }
+        if(array_key_exists('gpa_buton', $_POST)) {
+            $value = $_POST['gpa_input'];
+            update_user($sql, $UIN, "GPA", "$value"); 
+        }
+        if(array_key_exists('major_button', $_POST)) {
+            $value = $_POST['major_input'];
+            update_user($sql, $UIN, "Major", "$value"); 
+        }
+        if(array_key_exists('minor1_button', $_POST)) {
+            $value = $_POST['minor1_input'];
+            update_user($sql, $UIN, "Minor #1", "$value"); 
+        }
+        if(array_key_exists('minor2_button', $_POST)) {
+            $value = $_POST['minor2_input'];
+            update_user($sql, $UIN, "Minor #2", "$value"); 
+        }
+        if(array_key_exists('grad_year_button', $_POST)) {
+            $value = $_POST['grad_year_input'];
+            update_user($sql, $UIN, "Expected_Graduation", "$value"); 
+        }
+        if(array_key_exists('school_button', $_POST)) {
+            $value = $_POST['school_input'];
+            update_user($sql, $UIN, "Discord_Name", "$value"); 
+        }
+        if(array_key_exists('classification_button', $_POST)) {
+            $value = $_POST['classification_input'];
+            update_user($sql, $UIN, "Classification", "$value"); 
+        }
+        if(array_key_exists('phone_button', $_POST)) {
+            $value = $_POST['phone_input'];
+            update_user($sql, $UIN, "Phone", "$value"); 
+        }
+        if(array_key_exists('student_type_button', $_POST)) {
+            $value = $_POST['student_type_input'];
+            update_user($sql, $UIN, "Student Type", "$value"); 
+        }
         if(array_key_exists('delete_button', $_POST)) {
             delete_user($sql, $UIN);
         }
         function update_user($sql, $uin, $column, $value) {
             $updateQuery = "UPDATE users SET $column = \"$value\" WHERE UIN = $uin";
+            if ($sql->query($updateQuery)) {
+                echo "successful update";
+                header("Location: http://localhost/CSCE310/student_profile.php");
+            }
+            else {
+                echo "error while updating";
+                echo "Reason: ", $sql->error;
+            }
+        }
+        function update_student($sql, $uin, $column, $value) {
+            $updateQuery = "UPDATE college_student SET $column = \"$value\" WHERE UIN = $uin";
             if ($sql->query($updateQuery)) {
                 echo "successful update";
                 header("Location: http://localhost/CSCE310/student_profile.php");
