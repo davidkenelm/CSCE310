@@ -51,7 +51,6 @@
             else if (mysqli_num_rows($loginResult) == 1){
                 $loginRow = mysqli_fetch_assoc($loginResult);
                 $_SESSION['username'] = $loginRow['Username'];
-                $_SESSION['password'] = $loginRow['Password'];
                 $_SESSION['role'] = $loginRow['User_Type'];
                 $_SESSION['UIN'] = $loginRow['UIN'];
                 //echo "<li>Username: {$_SESSION['username']}, Password: {$_SESSION['password']} (Role: {$_SESSION['role']})</li>";

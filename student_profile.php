@@ -289,6 +289,7 @@
         }
         if(array_key_exists('delete_button', $_POST)) {
             delete_user($sql, $UIN);
+            delete_student($sql, $UIN);
         }
         function update_user($sql, $uin, $column, $value) {
             $updateQuery = "UPDATE users SET $column = \"$value\" WHERE UIN = $uin";
