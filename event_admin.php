@@ -430,7 +430,7 @@ function viewEvent($mysql, $eventToView) {
             'Event_Type' => $_POST['event_type']
         );
 
-        insertEvent($mysql, $eventData);
+        insertEvent($mysql, $eventData, $uin);
     }
     ?>
     <div class="container mt-3">
