@@ -11,7 +11,8 @@ include 'config.php';
   <title>Progress Record Information</title>
 </head>
 <body>
-  <h2>All THINGS Available</h2>
+  <h2>All Initiatives Available</h2>
+  <h4> Warning: All deletions will result in all current progress records being deleted too</h4>
   <?php
     $sql = "SELECT * FROM classes";
     // Prepare a statement
@@ -123,7 +124,7 @@ include 'config.php';
       // Start table formatting
       echo "<h3>All Certifications Offered</h3>";
       echo "<table border='1' style='width: 100%;'>";
-      echo "<tr><th>Class Name</th><th>Description</th><th>Type</th></tr>";
+      echo "<tr><th>Class Name</th><th>Description</th><th>Level</th></tr>";
 
       // Loop through the result set and display data in table rows
       $certifications = [];
@@ -170,15 +171,16 @@ include 'config.php';
         
         
     echo "</select>
+    <label for= 'newCertName'>New Name: </label>
+    <input type = 'text' name = 'newCertName' id = 'newCertName'>
     <label for= 'certDescription'>Description: </label>
-    <input type = 'text name = 'certDescription' id = 'certDescription'>
+    <input type = 'text' name = 'certDescription' id = 'certDescription'>
     <label for= 'certType'>Type: </label>
     <input type = 'text' id = 'certType' name = 'certType'>
-    <input type = 'submit' name = 'insertCert'>
+    <input type = 'submit' name = 'updateCert'>
     </form>";
 
     echo "<h4>Delete Certification</h4>";
-    echo "Deleting certification will lead to all progress record with certification deleted as well";
     echo "<form method='POST' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>
     <label for= 'certName'>Name: </label>
     <select id='certName' name='certName'>";
@@ -189,7 +191,7 @@ include 'config.php';
         
         
     echo "</select>";
-    echo "<input type = 'submit' name = 'DeleteCert' value = 'Delete'>";
+    echo "<input type = 'submit' name = 'deleteCert' value = 'Delete'>";
     echo "</form>";
 
 
@@ -266,13 +268,13 @@ include 'config.php';
     <input type = 'text' name = 'newInternName' id = 'newInternName'>
     
     <label for= 'internDescription'>Description: </label>
-    <input type = 'text name = 'internDescription' id = 'internDescription'>
+    <input type = 'text' name = 'internDescription' id = 'internDescription'>
     <label for= 'internType'>Goverment Type: </label>
     <select id='internType' name='internType'>
-        <option value='Freshman'>Y</option>
-        <option value='Sophomore'>N</option>
+        <option value='Y'>Y</option>
+        <option value='N'>N</option>
     </select>
-    <input type = 'submit' name = 'insertInternship'>
+    <input type = 'submit' name = 'updateInternship'>
     </form>";
 
     echo "<h4>Delete Internship</h4>";
@@ -350,6 +352,38 @@ include 'config.php';
 // Close the statement
         $stmt->close();
       }
+      if (isset($_POST['updateCert']) && !empty($_POST['updateCert']) ){
+
+        $sql = "UPDATE certifications SET Name = ?, Description = ?, Level = ? WHERE Cert_ID = ?";
+        $stmt = $mysql->prepare($sql);
+
+// Bind parameters and execute the query
+        $stmt->bind_param("ssss", $_POST['newCertName'], $_POST['certDescription'], $_POST['certType'],$_POST['certName']);
+        $stmt->execute();
+
+// Close the statement
+        $stmt->close();
+      }
+      if (isset($_POST['deleteCert']) && !empty($_POST['deleteCert']) ){
+        
+        $sql = "DELETE FROM cert_enrollment WHERE Cert_ID = ?";
+        $stmt = $mysql->prepare($sql);
+
+// Bind parameters and execute the query
+        $stmt->bind_param("s",$_POST['certName']);
+        $stmt->execute();
+        $stmt->close();
+        
+        $sql = "DELETE FROM certifications WHERE Cert_ID = ?";
+        $stmt = $mysql->prepare($sql);
+
+// Bind parameters and execute the query
+        $stmt->bind_param("s",$_POST['certName']);
+        $stmt->execute();
+
+// Close the statement
+        $stmt->close();
+      }
       if (isset($_POST['insertInternship']) && !empty($_POST['insertInternship']) ){
         $sql = "INSERT INTO internships (Name, Description, Is_Gov) 
         VALUES (?, ?, ?)";
@@ -358,6 +392,38 @@ include 'config.php';
 // Bind parameters and execute the query
 
         $stmt->bind_param("sss", $_POST['internName'], $_POST['internDescription'], $_POST['internType']);
+        $stmt->execute();
+
+// Close the statement
+        $stmt->close();
+      }
+      if (isset($_POST['updateInternship']) && !empty($_POST['updateInternship']) ){
+
+        $sql = "UPDATE internships SET Name = ?, Description = ?, Is_Gov = ? WHERE Intern_ID = ?";
+        $stmt = $mysql->prepare($sql);
+
+// Bind parameters and execute the query
+        $stmt->bind_param("ssss", $_POST['newInternName'], $_POST['internDescription'], $_POST['internType'],$_POST['internName']);
+        $stmt->execute();
+
+// Close the statement
+        $stmt->close();
+      }
+      if (isset($_POST['deleteInternship']) && !empty($_POST['deleteInternship']) ){
+        
+        $sql = "DELETE FROM intern_app WHERE Intern_ID = ?";
+        $stmt = $mysql->prepare($sql);
+
+// Bind parameters and execute the query
+        $stmt->bind_param("s",$_POST['internName']);
+        $stmt->execute();
+        $stmt->close();
+        
+        $sql = "DELETE FROM internships WHERE Intern_ID = ?";
+        $stmt = $mysql->prepare($sql);
+
+// Bind parameters and execute the query
+        $stmt->bind_param("s",$_POST['internName']);
         $stmt->execute();
 
 // Close the statement

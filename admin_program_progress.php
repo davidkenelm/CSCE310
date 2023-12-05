@@ -260,11 +260,15 @@ include 'config.php';
 
         if(isset($_POST['showInsertCert']) && $_POST['showInsertCert']=='show'){
           echo "<br></br>";
-          $sql = "SELECT certifications.Name, certifications.Cert_ID FROM certifications LEFT JOIN cert_enrollment ON certifications.Cert_ID = cert_enrollment.Cert_ID  AND cert_enrollment.Program_Num = ? AND cert_enrollment.UIN = ? WHERE cert_enrollment.CertE_Num IS NULL";
+          $sql = "SELECT certifications.Name, certifications.Cert_ID
+          FROM certifications
+          LEFT JOIN cert_enrollment ON certifications.Cert_ID = cert_enrollment.Cert_ID
+              AND cert_enrollment.UIN = ?
+          WHERE cert_enrollment.UIN IS NULL";
           $stmt = $mysql->prepare($sql);
   
           // Bind the parameter
-          $stmt->bind_param("ii", $programNum,$specific_student_id); // Assuming student_ID is an integer
+          $stmt->bind_param("i",$specific_student_id); // Assuming student_ID is an integer
   
           // Execute the query
           $stmt->execute();
