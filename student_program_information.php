@@ -1,5 +1,6 @@
 <?php
 // Include the configuration file to establish the database mysql
+// student side for initative infromation created by Ameel Aziz
 include 'config.php';
 session_start();
 ?>
