@@ -1,5 +1,5 @@
 <?php
-//David Windisch
+//Event Management created by David Windisch
 include 'config.php';
 session_start();
 
