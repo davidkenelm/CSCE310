@@ -1,4 +1,5 @@
 <?php
+//David Windisch
 include 'config.php';
 session_start();
 
