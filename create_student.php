@@ -1,5 +1,9 @@
 <?php
+    // This file was programmed by Abhishek Choudhury
+
+    // Get session to use session variables
     session_start();
+    // Get SQL setup
     include 'config.php';
 ?>
 

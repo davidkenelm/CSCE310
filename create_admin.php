@@ -1,5 +1,9 @@
 <?php
+    // This file was programmed by Abhishek Choudhury
+
+    // Get session to use session variables
     session_start();
+    // Get SQL setup
     include 'config.php';
 ?>
 
@@ -62,6 +66,7 @@
     </form>
 
     <?php
+        // When the submit button is pressed, the information from all the input fields are stored in variables, and the create_user function is called.
         if(array_key_exists('new_user_button', $_POST)) {
             $sql = $_SESSION['sql'];
             $username = $_POST['username_input'];
@@ -76,7 +81,10 @@
             $discord = $_POST['discord_input'];
             create_user($sql, $username, $password, $role, $admin_username, $admin_password, $fname, $middle_initial, $lname, $email, $discord);
         }
+
+        // SQL function to create a new entry in the users table with the given information.
         function create_user($sql, $username, $password, $role, $admin_username, $admin_password, $fname, $middle_initial, $lname, $email, $discord) {
+            // UIN is determined by querying for the max UIN currently in the table and adding one.
             $uinQuery = "SELECT max(UIN) FROM users;";
             $uinResult = mysqli_query($sql, $uinQuery);
             $uinRow = mysqli_fetch_assoc($uinResult);

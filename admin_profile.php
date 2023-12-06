@@ -1,5 +1,9 @@
 <?php
+    // This file was programmed by Abhishek Choudhury
+
+    // Get session to use session variables
     session_start();
+    // Get SQL setup
     include 'config.php';
 ?>
 
@@ -17,6 +21,8 @@
         include 'navbar.php';
         $UIN = $_SESSION['UIN'];
         $sql = $_SESSION['sql'];
+
+        // Query to get the information from the user table based on the session's UIN
         $profileQuery = "SELECT * FROM users WHERE UIN='$UIN'";
         $profileResult = mysqli_query($_SESSION['sql'], $profileQuery);
         if (mysqli_num_rows($profileResult) == 0) {
@@ -87,6 +93,9 @@
     </form>
 
     <?php
+        // Each if statement checks if the corresponding named button has been pressed.
+        // If so, the user table column that corresponds to that button is updated with the
+        // information from that input.
         if(array_key_exists('username_button', $_POST)) {
             $value = $_POST['username_input'];
             update_user($sql, $UIN, "Username", "$value"); 
@@ -122,6 +131,8 @@
         if(array_key_exists('delete_button', $_POST)) {
             delete_user($sql, $UIN);
         }
+
+        // Simple function to execute a SQL update for a given column with a given value in the user table
         function update_user($sql, $uin, $column, $value) {
             $updateQuery = "UPDATE users SET $column = \"$value\" WHERE UIN = $uin";
             if ($sql->query($updateQuery)) {
@@ -133,6 +144,8 @@
                 echo "Reason: ", $sql->error;
             }
         }
+
+        // SQL function to delete an entry from the user table
         function delete_user($sql, $uin) {
             $updateQuery = "DELETE FROM users WHERE UIN = $uin";
             if ($sql->query($updateQuery)) {

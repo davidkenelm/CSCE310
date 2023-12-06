@@ -1,6 +1,11 @@
 <?php
+    // This file was programmed by Abhishek Choudhury
+    
+    // Get session to use session variables
     session_start();
-    if(!isset($_SESSION['role'])){ //if login in session is not set
+    // Ensures that you're logged in by checking if the role session variable is set
+    // If it is not set, you are redirected to the login page.
+    if(!isset($_SESSION['role'])){ 
         header("Location: http://localhost/CSCE310/login.php");
     }
 ?>
@@ -24,6 +29,7 @@
                 <button type="submit" class="btn btn-primary" name="logout_button" value="Logout Button">Logout</button>
             </form>
             <?php
+                // When the logout button is pressed, all session variables are wiped and you are redirected to the login page.
                 if(array_key_exists('logout_button', $_POST)) {
                     session_destroy();
                     header("Location: http://localhost/CSCE310/login.php");

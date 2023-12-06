@@ -1,5 +1,9 @@
 <?php
+    // This file was programmed by Abhishek Choudhury
+
+    // Get session to use session variables
     session_start();
+    // Get SQL setup
     include 'config.php';
 ?>
 
@@ -31,6 +35,7 @@
     </form>
 
     <?php
+        // Executes functions when each button is clicked
         if(array_key_exists('login_button', $_POST)) {
             login(); 
         }
@@ -40,11 +45,16 @@
         if(array_key_exists('new_admin_button', $_POST)) {
             new_admin(); 
         }
+
+        // Sets necessary session variables and redirects to home page (index.php)
         function login() {
             $username = $_POST['email_input'];
             $password = $_POST['password_input'];
+            // Queries the database for an entry to users with matching username and password
             $loginQuery = "SELECT * FROM users WHERE Username='$username' AND Password='$password'";
             $loginResult = mysqli_query($_SESSION['sql'], $loginQuery);
+
+            // If there are no rows in the result, the user doesn't exist, so output and incorrect login message
             if (mysqli_num_rows($loginResult) == 0) {
                 echo "Incorrect username or password";
             }
@@ -60,9 +70,11 @@
                 echo "duplicate user detected";
             }
         }
+        // Redirects to create_student.php
         function new_student() {
             header("Location: http://localhost/CSCE310/create_student.php");
         }
+        // Redirects to create_admin.php
         function new_admin() {
             header("Location: http://localhost/CSCE310/create_admin.php");
         }

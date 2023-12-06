@@ -1,5 +1,9 @@
 <?php
+    // This file was programmed by Abhishek Choudhury
+
+    // Get session to use session variables
     session_start();
+    // Get SQL setup
     include 'config.php';
 ?>
 
@@ -17,6 +21,7 @@
         include 'navbar.php';
         $UIN = $_SESSION['UIN'];
         $sql = $_SESSION['sql'];
+        // Query to get the information from the user table based on the session's UIN
         $profileQuery = "SELECT * FROM users WHERE UIN='$UIN'";
         $profileResult = mysqli_query($_SESSION['sql'], $profileQuery);
         if (mysqli_num_rows($profileResult) == 0) {
@@ -37,6 +42,7 @@
         else {
             echo "duplicate user detected";
         }
+        // Query to get the information from the college_student table based on the session's UIN
         $studentQuery = "SELECT * FROM college_student WHERE UIN='$UIN'";
         $studentResult = mysqli_query($_SESSION['sql'], $studentQuery);
         if (mysqli_num_rows($studentResult) == 0) {
@@ -199,6 +205,7 @@
     </form>
 
     <?php
+        // buttons to update either the user table or the college_student table depending on the field
         if(array_key_exists('username_button', $_POST)) {
             $value = $_POST['username_input'];
             update_user($sql, $UIN, "Username", "$value"); 
@@ -287,10 +294,14 @@
             $value = $_POST['student_type_input'];
             update_student($sql, $UIN, "Student Type", "$value"); 
         }
+
+        // deletes entry from both user and college_student table
         if(array_key_exists('delete_button', $_POST)) {
             delete_user($sql, $UIN);
             delete_student($sql, $UIN);
         }
+
+        // Simple function to execute a SQL update for a given column with a given value in the user table
         function update_user($sql, $uin, $column, $value) {
             $updateQuery = "UPDATE users SET $column = \"$value\" WHERE UIN = $uin";
             if ($sql->query($updateQuery)) {
@@ -302,6 +313,8 @@
                 echo "Reason: ", $sql->error;
             }
         }
+
+        // Simple function to execute a SQL update for a given column with a given value in the college_student table
         function update_student($sql, $uin, $column, $value) {
             $updateQuery = "UPDATE college_student SET `$column` = \"$value\" WHERE UIN = $uin";
             echo $updateQuery;
@@ -314,6 +327,8 @@
                 echo "Reason: ", $sql->error;
             }
         }
+
+        // SQL function to delete an entry from the user table
         function delete_user($sql, $uin) {
             $updateQuery = "DELETE FROM users WHERE UIN = $uin";
             if ($sql->query($updateQuery)) {
@@ -328,6 +343,7 @@
             }
         }
 
+        // SQL function to delete an entry from the college_student table
         function delete_student($sql, $uin) {
             $updateQuery = "DELETE FROM college_student WHERE UIN = $uin";
             if ($sql->query($updateQuery)) {
