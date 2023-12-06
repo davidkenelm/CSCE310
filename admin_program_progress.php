@@ -1,5 +1,6 @@
 <?php
 // Include the configuration file to establish the database mysql
+// Admin side for program progress information crated by Ameel Aziz
 include 'config.php';
 session_start();
 ?>
