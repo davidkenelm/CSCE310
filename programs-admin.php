@@ -1,40 +1,48 @@
 <?php
+//Created By Sohaib Raja
 // Include the configuration file to establish the database mysql
 include 'config.php';
 session_start();
 
+//Post Request for when a program is added
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['programName']) && isset($_POST['programDescription'])) {
 
     $reportName = $_POST["programName"];
     $programDescription = $_POST["programDescription"];
 
-    $query = "INSERT INTO programs (Name, Description) VALUES ('$reportName', '$programDescription')";
-    mysqli_query($mysql, $query);
+    $stmt = $mysql->prepare("INSERT INTO programs (Name, Description) VALUES (?, ?)");
+    $stmt->bind_param("ss", $reportName, $programDescription);
+    $stmt->execute();
 
     header("Location: " . $_SERVER["PHP_SELF"]);
     exit();
 
 }
+
+//Post request for when a program is edited
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['editName']) && isset($_POST['editDescription'])) {
     $editName = $_POST["editName"];
     $editDescription = $_POST["editDescription"];
-    echo "run";
 
+    //changes query based on if a partial remove needs to be undone
     if (isset($_POST["editUndo"])) {
-        $query = "UPDATE programs SET Description = '$editDescription', isDeleted = NULL WHERE Name = '$editName'";
+        $stmt = $mysql->prepare("UPDATE programs SET Description = ?, isDeleted = NULL WHERE Name = ?");
     } else {
-        $query = "UPDATE programs SET Description = '$editDescription' WHERE Name = '$editName'";
-
+        $stmt = $mysql->prepare("UPDATE programs SET Description = ? WHERE Name = ?");
     }
 
-    mysqli_query($mysql, $query);
+    $stmt->bind_param("ss", $editDescription, $editName);
+    $stmt->execute();
 
     header("Location: " . $_SERVER["PHP_SELF"]);
     exit();
 }
+
+//Post request for when a program is removed
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['removeName'])) {
     $removeName = $_POST["removeName"];
 
+    //changes query based on if completed or partial removed
     if (isset($_POST["removeCheck"])) {
         $removeCheck = $_POST["removeCheck"];
 
@@ -48,6 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['removeName'])) {
         $stmt->fetch();
         $stmt->close();
 
+        //deletes from all dependent tables
         if ($programNum !== null) {
             $query = "DELETE FROM events WHERE Program_Num = $programNum";
             mysqli_query($mysql, $query);
@@ -71,7 +80,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['removeName'])) {
 
     }
 
-    //echo "<script> console.log('Run') </script>";
     header("Location: " . $_SERVER["PHP_SELF"]);
     exit();
 }
@@ -91,11 +99,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['removeName'])) {
 </head>
 
 <body style="background-color: rgb(240, 241, 245);">
-    <!-- Basic navigation links -->
+    <!-- Navbar import -->
     <?php
     include 'navbar.php';
     ?>
     <div class="container mt-5">
+        <!-- Div with table that contains all of the offered programs -->
         <div id="student-functionalities" class="mt-4 row justify-content-center text-center">
             <h1 class="h1">Current Programs</h1>
             <?php
@@ -127,6 +136,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['removeName'])) {
                         </table>";
             ?>
         </div>
+        <!-- Div with form for adding programs -->
         <div class="row mt-5 justify-content-center text-center">
             <h1 class="h1"> Add Programs </h1>
             <div class="col-5">
@@ -145,6 +155,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['removeName'])) {
                 </form>
             </div>
         </div>
+        <!-- Div with form for editing programs -->
         <div class="row mt-5 justify-content-center text-center">
             <h1 class="h1"> Edit Programs </h1>
             <div class="col-5">
@@ -171,6 +182,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['removeName'])) {
                     <button type="submit" class="btn btn-primary mt-2">Submit</button>
                 </form>
             </div>
+            <!-- Div with form for removing programs -->
             <div class="row mt-5 justify-content-center text-center">
                 <h1 class="h1"> Remove Programs </h1>
                 <div class="col-5">
@@ -194,6 +206,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['removeName'])) {
                     </form>
                 </div>
             </div>
+            <!-- Div with form for generating program reports -->
             <div class="row mt-5 mb-4 justify-content-center text-center">
                 <h1 class="h1"> Generate Program Reports </h1>
                 <div class="col">
@@ -214,6 +227,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['removeName'])) {
                         </form>
                     </div>
                     <?php
+                    //when a report is requested the table below is populated
                     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reportName'])) {
 
                         $reportName = $_POST["reportName"];

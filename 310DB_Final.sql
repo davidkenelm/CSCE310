@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: 310_db
+-- Host: 127.0.0.1    Database: 310_db2
 -- ------------------------------------------------------
 -- Server version	8.0.35
 
@@ -229,6 +229,26 @@ LOCK TABLES `documentation` WRITE;
 UNLOCK TABLES;
 
 --
+-- Temporary view structure for view `event_information`
+--
+
+DROP TABLE IF EXISTS `event_information`;
+/*!50001 DROP VIEW IF EXISTS `event_information`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `event_information` AS SELECT 
+ 1 AS `Event_ID`,
+ 1 AS `UIN`,
+ 1 AS `Program_Num`,
+ 1 AS `Start_Date`,
+ 1 AS `Time`,
+ 1 AS `Location`,
+ 1 AS `End_Date`,
+ 1 AS `Event_Type`,
+ 1 AS `Attendee_Count`*/;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Table structure for table `event_tracking`
 --
 
@@ -345,6 +365,26 @@ LOCK TABLES `internships` WRITE;
 UNLOCK TABLES;
 
 --
+-- Temporary view structure for view `program_registration_view`
+--
+
+DROP TABLE IF EXISTS `program_registration_view`;
+/*!50001 DROP VIEW IF EXISTS `program_registration_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `program_registration_view` AS SELECT 
+ 1 AS `Program_Num`,
+ 1 AS `Name`,
+ 1 AS `UIN`,
+ 1 AS `First_Name`,
+ 1 AS `M_Initial`,
+ 1 AS `Last_Name`,
+ 1 AS `Uncom_Cert`,
+ 1 AS `Com_Cert`,
+ 1 AS `Purpose_Statement`*/;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Table structure for table `programs`
 --
 
@@ -429,6 +469,42 @@ LOCK TABLES `users` WRITE;
 INSERT INTO `users` VALUES (730002164,'Sohaib','A','Raja','username','pass','Student','raja@mail.com','discord');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Final view structure for view `event_information`
+--
+
+/*!50001 DROP VIEW IF EXISTS `event_information`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `event_information` AS select `e`.`Event_ID` AS `Event_ID`,`e`.`UIN` AS `UIN`,`e`.`Program_Num` AS `Program_Num`,`e`.`Start_Date` AS `Start_Date`,`e`.`Time` AS `Time`,`e`.`Location` AS `Location`,`e`.`End_Date` AS `End_Date`,`e`.`Event_Type` AS `Event_Type`,count(`et`.`UIN`) AS `Attendee_Count` from (`events` `e` left join `event_tracking` `et` on((`e`.`Event_ID` = `et`.`Event_ID`))) group by `e`.`Event_ID`,`e`.`UIN`,`e`.`Program_Num`,`e`.`Start_Date`,`e`.`Time`,`e`.`Location`,`e`.`End_Date`,`e`.`Event_Type` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `program_registration_view`
+--
+
+/*!50001 DROP VIEW IF EXISTS `program_registration_view`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `program_registration_view` AS select `programs`.`Program_Num` AS `Program_Num`,`programs`.`Name` AS `Name`,`users`.`UIN` AS `UIN`,`users`.`First_Name` AS `First_Name`,`users`.`M_Initial` AS `M_Initial`,`users`.`Last_Name` AS `Last_Name`,`applications`.`Uncom_Cert` AS `Uncom_Cert`,`applications`.`Com_Cert` AS `Com_Cert`,`applications`.`Purpose_Statement` AS `Purpose_Statement` from (((`users` join `college_student` on((`users`.`UIN` = `college_student`.`UIN`))) join `applications` on((`college_student`.`UIN` = `applications`.`UIN`))) join `programs` on((`applications`.`Program_Num` = `programs`.`Program_Num`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -439,4 +515,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-05 16:36:20
+-- Dump completed on 2023-12-05 22:34:24
