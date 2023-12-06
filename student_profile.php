@@ -229,63 +229,63 @@
         }
         if(array_key_exists('gender_button', $_POST)) {
             $value = $_POST['gender_input'];
-            update_user($sql, $UIN, "Gender", "$value"); 
+            update_student($sql, $UIN, "Gender", "$value"); 
         }
         if(array_key_exists('race_button', $_POST)) {
             $value = $_POST['race_select'];
-            update_user($sql, $UIN, "Race", "$value"); 
+            update_student($sql, $UIN, "Race", "$value"); 
         }
         if(array_key_exists('hispanic_button', $_POST)) {
             $value = $_POST['hispanic_check'];
-            update_user($sql, $UIN, "Hispanic_Latino", "$value"); 
+            update_student($sql, $UIN, "Hispanic_Latino", "$value"); 
         }
         if(array_key_exists('citizen_button', $_POST)) {
             $value = $_POST['citizen_check'];
-            update_user($sql, $UIN, "US_Citizen", "$value"); 
+            update_student($sql, $UIN, "US_Citizen", "$value"); 
         }
         if(array_key_exists('generation_button', $_POST)) {
             $value = $_POST['generation_check'];
-            update_user($sql, $UIN, "First_Generation", "$value"); 
+            update_student($sql, $UIN, "First_Generation", "$value"); 
         }
         if(array_key_exists('dob_button', $_POST)) {
             $value = $_POST['dob_input'];
-            update_user($sql, $UIN, "DOB", "$value"); 
+            update_student($sql, $UIN, "DOB", "$value"); 
         }
         if(array_key_exists('gpa_buton', $_POST)) {
             $value = $_POST['gpa_input'];
-            update_user($sql, $UIN, "GPA", "$value"); 
+            update_student($sql, $UIN, "GPA", "$value"); 
         }
         if(array_key_exists('major_button', $_POST)) {
             $value = $_POST['major_input'];
-            update_user($sql, $UIN, "Major", "$value"); 
+            update_student($sql, $UIN, "Major", "$value"); 
         }
         if(array_key_exists('minor1_button', $_POST)) {
             $value = $_POST['minor1_input'];
-            update_user($sql, $UIN, "Minor #1", "$value"); 
+            update_student($sql, $UIN, "Minor #1", "$value"); 
         }
         if(array_key_exists('minor2_button', $_POST)) {
             $value = $_POST['minor2_input'];
-            update_user($sql, $UIN, "Minor #2", "$value"); 
+            update_student($sql, $UIN, "Minor #2", "$value"); 
         }
         if(array_key_exists('grad_year_button', $_POST)) {
             $value = $_POST['grad_year_input'];
-            update_user($sql, $UIN, "Expected_Graduation", "$value"); 
+            update_student($sql, $UIN, "Expected_Graduation", "$value"); 
         }
         if(array_key_exists('school_button', $_POST)) {
             $value = $_POST['school_input'];
-            update_user($sql, $UIN, "Discord_Name", "$value"); 
+            update_student($sql, $UIN, "School", "$value"); 
         }
         if(array_key_exists('classification_button', $_POST)) {
             $value = $_POST['classification_input'];
-            update_user($sql, $UIN, "Classification", "$value"); 
+            update_student($sql, $UIN, "Classification", "$value"); 
         }
         if(array_key_exists('phone_button', $_POST)) {
             $value = $_POST['phone_input'];
-            update_user($sql, $UIN, "Phone", "$value"); 
+            update_student($sql, $UIN, "Phone", "$value"); 
         }
         if(array_key_exists('student_type_button', $_POST)) {
             $value = $_POST['student_type_input'];
-            update_user($sql, $UIN, "Student Type", "$value"); 
+            update_student($sql, $UIN, "Student Type", "$value"); 
         }
         if(array_key_exists('delete_button', $_POST)) {
             delete_user($sql, $UIN);
@@ -303,7 +303,8 @@
             }
         }
         function update_student($sql, $uin, $column, $value) {
-            $updateQuery = "UPDATE college_student SET $column = \"$value\" WHERE UIN = $uin";
+            $updateQuery = "UPDATE college_student SET `$column` = \"$value\" WHERE UIN = $uin";
+            echo $updateQuery;
             if ($sql->query($updateQuery)) {
                 echo "successful update";
                 header("Location: http://localhost/CSCE310/student_profile.php");
@@ -315,6 +316,20 @@
         }
         function delete_user($sql, $uin) {
             $updateQuery = "DELETE FROM users WHERE UIN = $uin";
+            if ($sql->query($updateQuery)) {
+                echo "successful delete\n";
+                echo "please navigate to the hompage\n";
+                session_destroy();
+                //header("Location: http://localhost/CSCE310/student_profile.php");
+            }
+            else {
+                echo "error while deleting\n";
+                echo "Reason: ", $sql->error;
+            }
+        }
+
+        function delete_student($sql, $uin) {
+            $updateQuery = "DELETE FROM college_student WHERE UIN = $uin";
             if ($sql->query($updateQuery)) {
                 echo "successful delete\n";
                 echo "please navigate to the hompage\n";
