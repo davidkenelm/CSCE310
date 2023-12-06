@@ -420,6 +420,24 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+CREATE VIEW event_information AS
+SELECT
+    e.Event_ID,
+    e.UIN,
+    e.Program_Num,
+    e.Start_Date,
+    e.Time,
+    e.Location,
+    e.End_Date,
+    e.Event_Type,
+    COUNT(et.UIN) AS Attendee_Count
+FROM
+    events e
+LEFT JOIN
+    event_tracking et ON e.Event_ID = et.Event_ID
+GROUP BY
+    e.Event_ID, e.UIN, e.Program_Num, e.Start_Date, e.Time, e.Location, e.End_Date, e.Event_Type;
+
 --
 -- Dumping data for table `users`
 --
